@@ -15,7 +15,7 @@ export async function getCurrentSessionId(): Promise<string | null> {
 export async function getCurrentUserId(): Promise<string | null> {
   const sessionId = await getCurrentSessionId();
   if (!sessionId) return null;
-  return getSessionUserId(sessionId);
+  return await getSessionUserId(sessionId);
 }
 
 export async function requireCurrentUser(): Promise<string> {
@@ -29,6 +29,6 @@ export async function requireCurrentUser(): Promise<string> {
 export async function logoutCurrentUser(): Promise<void> {
   const sessionId = await getCurrentSessionId();
   if (sessionId) {
-    deleteSession(sessionId);
+    await deleteSession(sessionId);
   }
 }

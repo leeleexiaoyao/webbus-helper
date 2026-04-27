@@ -4,7 +4,7 @@
   min-height: 100vh;
   min-height: 100dvh;
   position: relative;
-  padding: 0 0 calc(env(safe-area-inset-bottom) + 20px);
+  padding: 0 0 calc(env(safe-area-inset-bottom) + 40px);
   background: #f3f2ef;
   overflow-x: hidden;
 }

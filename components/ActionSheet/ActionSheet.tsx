@@ -5,9 +5,15 @@ import styles from "./ActionSheet.module.css";
 
 interface ActionSheetProps {
   visible: boolean;
-  actions: { label: string; color?: string; onClick: () => void }[];
+  actions: { 
+    label: string; 
+    color?: string; 
+    onClick: () => void; 
+    icon?: string;
+    description?: string;
+    isDanger?: boolean;
+  }[];
   cancelText?: string;
-  description?: string;
   onClose: () => void;
 }
 
@@ -15,7 +21,6 @@ export function ActionSheet({
   visible,
   actions,
   cancelText = "取消",
-  description,
   onClose,
 }: ActionSheetProps) {
   useEffect(() => {
@@ -32,19 +37,22 @@ export function ActionSheet({
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
-        {description && <div className={styles.description}>{description}</div>}
         <div className={styles.actions}>
           {actions.map((action, index) => (
             <button
               key={index}
-              className={styles.actionItem}
-              style={{ color: action.color || "#1f2539" }}
+              className={`${styles.actionItem} ${action.isDanger ? styles.actionItemDanger : ''}`}
+              style={{ color: action.color || (action.isDanger ? "#e53e3e" : "#1f2539") }}
               onClick={() => {
                 action.onClick();
                 onClose();
               }}
             >
-              {action.label}
+              {action.icon && <img src={action.icon} alt="" className={styles.actionIcon} />}
+              <div className={styles.actionContent}>
+                <div className={styles.actionLabel}>{action.label}</div>
+                {action.description && <div className={styles.actionDesc}>{action.description}</div>}
+              </div>
             </button>
           ))}
         </div>

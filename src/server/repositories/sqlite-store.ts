@@ -12,6 +12,12 @@ import { APP_STATE_VERSION, createEmptyTripTools } from "../../domain/constants"
 import type { DataStore } from "../../domain/repository";
 import { getDb } from "../db";
 
+// 临时方案：创建store实例的函数
+export function getStore(userId?: string): SqliteStore {
+  const currentUserId = userId || "default-user-id";
+  return new SqliteStore(currentUserId);
+}
+
 export class SqliteStore implements DataStore {
   private currentUserId: string;
 

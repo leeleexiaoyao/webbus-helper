@@ -1,14 +1,10 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PageNavbar } from "@/components/PageNavbar/PageNavbar";
+import { useTrip } from "@/src/lib/hooks/use-trip";
 import s from "./page.module.css";
-
-/* 生成 6 位随机数字口令 */
-function generatePassword(): string {
-  return String(Math.floor(100000 + Math.random() * 900000));
-}
 
 interface Template {
   id: string;
@@ -17,19 +13,22 @@ interface Template {
 }
 
 const TEMPLATES: Template[] = [
-  { id: "49", displayName: "49座", layoutText: "11排×4+5" },
-  { id: "53", displayName: "53座", layoutText: "13排×4+1" },
-  { id: "57", displayName: "57座", layoutText: "14排×4+1" },
+  { id: "template-49", displayName: "经典 49座", layoutText: "4 × 11 + 5" },
+  { id: "template-53", displayName: "舒适 53座", layoutText: "4 × 12 + 5" },
+  { id: "template-57", displayName: "宽敞 57座", layoutText: "4 × 13 + 5" },
 ];
+
+const DEFAULT_TEMPLATE = "template-49";
 
 export default function CreateTripPage() {
   const router = useRouter();
+  const { createTrip } = useTrip();
 
   const [tripName, setTripName] = useState("");
   const [departureDate, setDepartureDate] = useState("");
   const [departureTime, setDepartureTime] = useState("");
-  const [password] = useState(generatePassword);
-  const [selectedTemplate, setSelectedTemplate] = useState("49");
+  const [password, setPassword] = useState("");
+  const [selectedTemplate, setSelectedTemplate] = useState(DEFAULT_TEMPLATE);
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState("");
 
@@ -38,10 +37,19 @@ export default function CreateTripPage() {
     setTimeout(() => setToast(""), 1600);
   }, []);
 
+  // 生成车次口令
+  useEffect(() => {
+    // 生成 6 位随机数字口令
+    const generatePassword = (): string => {
+      return String(Math.floor(100000 + Math.random() * 900000));
+    };
+    setPassword(generatePassword());
+  }, []);
+
   const handleCopyPassword = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(password);
-      showToast("口令已复制");
+      showToast("已复制");
     } catch {
       showToast("复制失败");
     }
@@ -63,25 +71,28 @@ export default function CreateTripPage() {
 
     setSubmitting(true);
     try {
-      const res = await fetch("/api/trips", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          tripName: tripName.trim(),
-          departureDate,
-          departureTime,
-          templateId: selectedTemplate,
-        }),
+      // 合并日期时间
+      const fullDepartureTime = `${departureDate} ${departureTime}`;
+      
+      await createTrip({
+        tripName: tripName.trim(),
+        departureTime: fullDepartureTime,
+        password: password,
+        templateId: selectedTemplate,
       });
-      if (!res.ok) throw new Error("创建失败");
-      const data = await res.json();
-      router.push(`/trip/${data.tripId}`);
-    } catch {
-      showToast("创建失败，请重试");
+      
+      showToast("创建成功");
+      setTimeout(() => {
+        router.push("/");
+      }, 450);
+    } catch (error) {
+      console.log('Create trip error:', error);
+      const errorMessage = error instanceof Error ? error.message : "创建失败，请重试";
+      showToast(errorMessage);
     } finally {
       setSubmitting(false);
     }
-  }, [tripName, departureDate, departureTime, selectedTemplate, router, showToast]);
+  }, [tripName, departureDate, departureTime, password, selectedTemplate, router, showToast, createTrip]);
 
   return (
     <div className={s.page}>

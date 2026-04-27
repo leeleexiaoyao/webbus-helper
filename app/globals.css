@@ -15,24 +15,24 @@
   --admin: #21c980;
   --shadow: none;
 
-  /* 圆角体系 */
-  --radius-xl: 20px;
-  --radius-lg: 16px;
-  --radius-md: 12px;
-  --radius-sm: 12px;
+  /* 圆角体系 - 与小程序一致 */
+  --radius-xl: 20px; /* 40rpx */
+  --radius-lg: 16px; /* 32rpx */
+  --radius-md: 12px; /* 24rpx */
+  --radius-sm: 12px; /* 24rpx */
 
-  /* 字号体系 */
-  --font-page-title: 26px;
-  --font-hero-title: 20px;
-  --font-title-lg: 18px;
-  --font-title-sm: 16px;
-  --font-section-title: 17px;
-  --font-body-lg: 15px;
-  --font-body: 14px;
-  --font-body-sm: 13px;
-  --font-meta: 12px;
-  --font-caption: 11px;
-  --font-micro: 10px;
+  /* 字号体系 - 与小程序一致 */
+  --font-page-title: 26px; /* 52rpx */
+  --font-hero-title: 20px; /* 40rpx */
+  --font-title-lg: 18px; /* 36rpx */
+  --font-title-sm: 16px; /* 32rpx */
+  --font-section-title: 17px; /* 34rpx */
+  --font-body-lg: 15px; /* 30rpx */
+  --font-body: 14px; /* 28rpx */
+  --font-body-sm: 13px; /* 26rpx */
+  --font-meta: 12px; /* 24rpx */
+  --font-caption: 11px; /* 22rpx */
+  --font-micro: 10px; /* 20rpx */
 
   /* 小程序特有颜色 */
   --cta-green: #d8f940;
@@ -44,6 +44,21 @@
   --tab-inactive: #6e7f92;
   --tab-active: #ff6b3d;
   --navbar-bg: #eff5fc;
+  
+  /* 间距体系 - 与小程序一致 */
+  --spacing-xs: 4px; /* 8rpx */
+  --spacing-sm: 8px; /* 16rpx */
+  --spacing-md: 12px; /* 24rpx */
+  --spacing-lg: 14px; /* 28rpx */
+  --spacing-xl: 16px; /* 32rpx */
+  --spacing-2xl: 20px; /* 40rpx */
+  --spacing-3xl: 24px; /* 48rpx */
+  --spacing-4xl: 32px; /* 64rpx */
+  --spacing-5xl: 36px; /* 72rpx */
+  --spacing-6xl: 38px; /* 76rpx */
+  --spacing-7xl: 39px; /* 78rpx */
+  --spacing-8xl: 40px; /* 80rpx */
+  --spacing-9xl: 44px; /* 88rpx */
 }
 
 * {
@@ -70,14 +85,18 @@ body {
   overflow-x: hidden;
 }
 
-/* 页面容器 */
+/* 页面容器 - 与小程序一致 */
 .page-shell {
-  padding: 14px 12px 20px;
+  padding: var(--spacing-lg) var(--spacing-md) var(--spacing-2xl);
   min-height: 100vh;
   min-height: 100dvh;
+  box-sizing: border-box;
+  background: #ffffff;
+  color: var(--text-primary);
+  font-size: var(--font-body-sm);
 }
 
-/* 卡片 */
+/* 卡片 - 与小程序一致 */
 .card {
   background: #ffffff;
   border: 1px solid rgba(17, 17, 17, 0.05);
@@ -86,7 +105,7 @@ body {
   box-shadow: var(--shadow);
 }
 
-/* 区块标题 */
+/* 区块标题 - 与小程序一致 */
 .section-title {
   font-size: var(--font-section-title);
   font-weight: 700;
@@ -99,10 +118,10 @@ body {
   line-height: 1.6;
 }
 
-/* 按钮系统 */
+/* 按钮系统 - 与小程序一致 */
 .primary-btn, .secondary-btn, .danger-btn, .ghost-btn {
   display: block;
-  width: 100%;
+  width: auto;
   min-height: 0;
   padding: 16px 12px;
   border-radius: 999px;
@@ -126,27 +145,35 @@ body {
 .ghost-btn { background: #ffffff; color: var(--text-primary); border: 1px solid #ededed; }
 .danger-btn { background: #d34f3d; color: #ffffff; }
 
-/* CTA 绿色按钮 */
+/* 按钮伪元素 - 与小程序一致 */
+.primary-btn::after, .secondary-btn::after, .danger-btn::after, .ghost-btn::after {
+  border: none;
+}
+
+/* CTA 绿色按钮 - 与小程序一致 */
 .cta-btn {
   display: block;
   width: 100%;
-  padding: 16px 12px;
+  min-height: 44px;
+  padding: 0 16px;
   border-radius: 999px;
   background: var(--cta-green);
   color: var(--text-primary);
-  font-size: var(--font-body);
+  font-size: var(--font-body-lg);
   font-weight: 600;
+  line-height: 44px;
   text-align: center;
   cursor: pointer;
   border: none;
   transition: background 0.2s;
+  box-sizing: border-box;
 }
 
 .cta-btn:active {
   background: var(--cta-green-hover);
 }
 
-/* 胶囊标签 */
+/* 胶囊标签 - 与小程序一致 */
 .pill {
   display: inline-flex;
   align-items: center;
@@ -157,7 +184,7 @@ body {
   font-size: var(--font-body-sm);
 }
 
-/* 标签列表 */
+/* 标签列表 - 与小程序一致 */
 .tag-list { display: flex; flex-wrap: wrap; gap: 5px; }
 .tag-chip {
   padding: 4px 8px;
@@ -167,7 +194,7 @@ body {
   font-size: var(--font-body-sm);
 }
 
-/* 表单 */
+/* 表单 - 与小程序一致 */
 .field-label { font-size: var(--font-caption); font-weight: 600; color: var(--text-secondary); }
 .field-input {
   margin-top: 6px;
@@ -187,7 +214,7 @@ body {
   border-color: var(--cta-green);
 }
 
-/* 头像占位 */
+/* 头像占位 - 与小程序一致 */
 .avatar-fallback {
   position: relative;
   overflow: hidden;

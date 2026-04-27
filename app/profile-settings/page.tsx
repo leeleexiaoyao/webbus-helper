@@ -9,7 +9,7 @@ import styles from "./page.module.css";
 
 export default function ProfileSettingsPage() {
   const router = useRouter();
-  const { data, loading } = useTrip();
+  const { data, loading, leaveTrip, dissolveTrip } = useTrip();
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const tripMeta = data?.currentTrip?.tripMeta;
@@ -28,11 +28,10 @@ export default function ProfileSettingsPage() {
     if (!tripMeta) return;
 
     try {
-      const { api } = await import("@/src/lib/api-client");
       if (isAdmin) {
-        await api.post(`/api/members/${tripMeta.tripId}/dissolve`, {});
+        await dissolveTrip();
       } else {
-        await api.post(`/api/members/${tripMeta.tripId}/leave`, {});
+        await leaveTrip();
       }
       router.push("/");
     } catch (err) {

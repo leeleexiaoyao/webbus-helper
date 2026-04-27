@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import { useParams } from "next/navigation";
 import { PageNavbar } from "@/components/PageNavbar/PageNavbar";
+import { useTrip } from "@/src/lib/hooks/use-trip";
 import s from "./page.module.css";
 
 /* ---- 类型 ---- */
@@ -14,7 +14,7 @@ interface FavoriteMember {
   isAdmin: boolean;
   isMutualFavoriteWithViewer: boolean;
   seatLabel: string;
-  tagViews: { label: string; style: string }[];
+  tagViews: { label: string; style: any }[];
 }
 
 interface RankingMember {
@@ -25,6 +25,7 @@ interface RankingMember {
   isAdmin: boolean;
   seatLabel: string;
   favoriteCount: number;
+  joinedAt: number;
 }
 
 interface PageData {
@@ -38,105 +39,67 @@ interface PageData {
   ranking: RankingMember[];
 }
 
-/* ---- Mock 数据（开发阶段使用） ---- */
-const MOCK_DATA: PageData = {
-  tripName: "周末出游团",
-  favoriteCount: 3,
-  favoriteLimit: 5,
-  isAdmin: true,
-  viewerRoleLabel: "管理员",
-  showRankingTab: true,
-  favorites: [
-    {
-      userId: "u1",
-      nickname: "小明",
-      avatarUrl: "",
-      initial: "明",
-      isAdmin: false,
-      isMutualFavoriteWithViewer: true,
-      seatLabel: "A3",
-      tagViews: [
-        { label: "活泼", style: "background:rgba(255,122,89,0.12);color:#ff7a59;" },
-        { label: "爱笑", style: "background:rgba(43,145,255,0.1);color:#2b91ff;" },
-      ],
-    },
-    {
-      userId: "u2",
-      nickname: "小红",
-      avatarUrl: "",
-      initial: "红",
-      isAdmin: true,
-      isMutualFavoriteWithViewer: false,
-      seatLabel: "B5",
-      tagViews: [
-        { label: "安静", style: "background:rgba(39,174,96,0.1);color:#27ae60;" },
-      ],
-    },
-    {
-      userId: "u3",
-      nickname: "阿杰",
-      avatarUrl: "",
-      initial: "杰",
-      isAdmin: false,
-      isMutualFavoriteWithViewer: false,
-      seatLabel: "C7",
-      tagViews: [],
-    },
-  ],
-  ranking: [
-    {
-      userId: "u2",
-      nickname: "小红",
-      avatarUrl: "",
-      initial: "红",
-      isAdmin: true,
-      seatLabel: "B5",
-      favoriteCount: 8,
-    },
-    {
-      userId: "u1",
-      nickname: "小明",
-      avatarUrl: "",
-      initial: "明",
-      isAdmin: false,
-      seatLabel: "A3",
-      favoriteCount: 5,
-    },
-    {
-      userId: "u3",
-      nickname: "阿杰",
-      avatarUrl: "",
-      initial: "杰",
-      isAdmin: false,
-      seatLabel: "C7",
-      favoriteCount: 2,
-    },
-  ],
-};
-
 export default function FavoritesPage() {
-  const params = useParams();
-  const tripId = params?.tripId as string | undefined;
-
   const [pageData, setPageData] = useState<PageData | null>(null);
-  const [activeTab, setActiveTab] = useState<"mine" | "ranking">("mine");
+  const [activeTab, setActiveTab] = useState<"mine" | "ranking">('mine');
+  const { data, loading, toggleFavoriteMember, refresh, getFavoritesPageData } = useTrip();
+
+  // 获取收藏页面数据
+  const fetchFavoritesData = useCallback(async () => {
+    try {
+      const data = await getFavoritesPageData();
+      setPageData({
+        tripName: data.tripName,
+        favoriteCount: data.favoriteCount,
+        favoriteLimit: data.favoriteLimit,
+        isAdmin: data.isAdmin,
+        viewerRoleLabel: data.viewerRoleLabel,
+        showRankingTab: data.showRankingTab,
+        favorites: data.favorites,
+        ranking: data.ranking
+      });
+    } catch (error) {
+      console.error('获取收藏数据失败:', error);
+    }
+  }, [getFavoritesPageData]);
 
   useEffect(() => {
-    // TODO: 替换为真实 API 调用
-    // fetch(`/api/trips/${tripId}/favorites`).then(...)
-    setPageData(MOCK_DATA);
-  }, [tripId]);
+    fetchFavoritesData();
+  }, [fetchFavoritesData]);
+
+  // 切换标记后刷新数据
+  const handleToggleFavorite = useCallback(async (userId: string) => {
+    try {
+      await toggleFavoriteMember(userId);
+      await fetchFavoritesData();
+    } catch (error) {
+      console.error("切换标记失败:", error);
+    }
+  }, [toggleFavoriteMember, fetchFavoritesData]);
 
   const handleTabChange = useCallback((tab: "mine" | "ranking") => {
     setActiveTab(tab);
   }, []);
 
-  if (!pageData) {
+  // 加载态
+  if (loading) {
     return (
       <div className={s.page}>
-        <PageNavbar title="" />
+        <PageNavbar title="标记" />
         <div className={s.empty}>
           <div className={s.emptyTitle}>加载中...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // 没有加入车次
+  if (!pageData || !data?.currentTrip) {
+    return (
+      <div className={s.page}>
+        <PageNavbar title="标记" />
+        <div className={s.empty}>
+          <div className={s.emptyTitle}>暂无标记</div>
         </div>
       </div>
     );
@@ -146,7 +109,7 @@ export default function FavoritesPage() {
 
   return (
     <div className={s.page}>
-      <PageNavbar title="" />
+      <PageNavbar title="标记" />
 
       {showEmpty ? (
         <div className={s.empty}>
@@ -198,7 +161,11 @@ export default function FavoritesPage() {
           {activeTab === "mine" && (
             <div className={s.list}>
               {pageData.favorites.map((item) => (
-                <div key={item.userId} className={s.favoriteCard}>
+                <div 
+                  key={item.userId} 
+                  className={s.favoriteCard}
+                  onClick={() => handleToggleFavorite(item.userId)}
+                >
                   {item.avatarUrl ? (
                     <img className={s.avatar} src={item.avatarUrl} alt={item.nickname} />
                   ) : (
@@ -218,7 +185,7 @@ export default function FavoritesPage() {
                     {item.tagViews.length > 0 && (
                       <div className={s.tags}>
                         {item.tagViews.map((tag) => (
-                          <span key={tag.label} className={s.tagChip} style={tag.style as React.CSSProperties}>
+                          <span key={tag.label} className={s.tagChip} style={tag.style}>
                             {tag.label}
                           </span>
                         ))}

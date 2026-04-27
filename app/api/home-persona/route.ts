@@ -7,28 +7,21 @@ import { BusinessError } from "@/src/domain/errors";
 export async function POST(request: NextRequest) {
   try {
     const userId = await requireCurrentUser();
-    const body = await request.json();
-    
     const store = getStore(userId);
-    const tripService = new TripService(store);
+    const service = new TripService(store);
     
-    // 使用服务层创建车次
-    const result = tripService.createTrip({
-      tripName: body.tripName,
-      departureTime: body.departureTime,
-      password: body.password,
-      templateId: body.templateId
-    });
+    const body = await request.json();
+    const { homePersonaAssetId } = body;
     
-    return NextResponse.json({ success: true, tripId: result.currentTrip?.tripMeta.tripId });
+    const result = service.updateHomePersona(homePersonaAssetId);
+    return NextResponse.json(result);
   } catch (error) {
-    console.log('Create trip error:', error);
     if (error instanceof BusinessError) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
     if ((error as any).message === "UNAUTHORIZED") {
       return NextResponse.json({ error: "请先登录" }, { status: 401 });
     }
-    return NextResponse.json({ error: "创建失败" }, { status: 500 });
+    return NextResponse.json({ error: "更新失败" }, { status: 500 });
   }
 }

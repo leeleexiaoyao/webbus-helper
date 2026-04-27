@@ -6,39 +6,39 @@ import { useTrip } from "@/src/lib/hooks/use-trip";
 import { TabBar } from "@/components/TabBar/TabBar";
 import styles from "./page.module.css";
 
-/* 工具卡片数据 */
+/* 工具卡片数据 - 与小程序保持一致 */
 const toolCards = [
-  {
-    type: "vote",
-    themeKey: "vote",
-    displayTitle: "随机抽",
-    displayDescription: "随机抽取幸运成员",
-    ctaLabel: "开始抽取",
-    imageUrl: "/assets/icons/icon_tools_投票.png",
-  },
   {
     type: "seat-draw",
     themeKey: "seat-draw",
-    displayTitle: "做选择",
-    displayDescription: "帮你做出选择",
-    ctaLabel: "开始选择",
-    imageUrl: "/assets/icons/icon_tools_抽签.png",
+    displayTitle: "随机抽",
+    displayDescription: "公平随机抽号",
+    ctaLabel: "去使用",
+    imageUrl: "/assets/icons/icon_tools_随机选号.png",
   },
   {
-    type: "lottery",
-    themeKey: "lottery",
-    displayTitle: "大转盘",
-    displayDescription: "幸运大转盘抽奖",
-    ctaLabel: "开始抽奖",
-    imageUrl: "/assets/icons/icon_tools_幸运大转盘.png",
+    type: "vote",
+    themeKey: "vote",
+    displayTitle: "做选择",
+    displayDescription: "选出最佳方案",
+    ctaLabel: "去使用",
+    imageUrl: "/assets/icons/icon_tools_投票.png",
   },
   {
     type: "wheel",
     themeKey: "wheel",
+    displayTitle: "大转盘",
+    displayDescription: "大风车转啊转",
+    ctaLabel: "去使用",
+    imageUrl: "/assets/icons/icon_tools_幸运大转盘.png",
+  },
+  {
+    type: "lottery",
+    themeKey: "lottery",
     displayTitle: "幸运签",
-    displayDescription: "抽一支幸运签",
-    ctaLabel: "抽签",
-    imageUrl: "/assets/icons/icon_tools_随机选号.png",
+    displayDescription: "抽好签配好运",
+    ctaLabel: "去使用",
+    imageUrl: "/assets/icons/icon_tools_抽签.png",
   },
 ] as const;
 
@@ -78,7 +78,7 @@ export default function ToolsPage() {
       <div className={styles.toolsHeader}>
         <div className={styles.toolsTitle}>工具</div>
         <div className={styles.toolsSubtitle}>
-          {hasTrip ? "趣味小工具，让旅途更愉快" : "请先创建或加入车次"}
+          {hasTrip ? "所有玩法都在这里" : "先创建或加入车次"}
         </div>
       </div>
 
@@ -122,7 +122,7 @@ export default function ToolsPage() {
       {/* 无车次：空状态 */}
       {!hasTrip && (
         <div className={styles.toolsEmptyState}>
-          <div className={styles.toolsEmptyLabel}>暂未开放</div>
+          <div className={styles.toolsEmptyLabel}>加入车次后，才能进入玩法详情页</div>
         </div>
       )}
 

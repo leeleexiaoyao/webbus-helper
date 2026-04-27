@@ -2,10 +2,94 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useAuth } from "@/src/lib/hooks/use-auth";
+import { useTrip } from "@/src/lib/hooks/use-trip";
 import { buildTagColorViews } from "@/src/lib/tag-style";
+import { HOME_PERSONA_OPTIONS } from "@/src/domain/constants";
 import { TabBar } from "@/components/TabBar/TabBar";
 import styles from "./page.module.css";
+
+function resolveProfileIllustrationUrl(homePersonaAssetId: string | null): string {
+  if (!homePersonaAssetId) {
+    return "/assets/personas/profile-illustration.svg";
+  }
+
+  return HOME_PERSONA_OPTIONS.find((option) => option.id === homePersonaAssetId)?.imageUrl ?? "/assets/personas/profile-illustration.svg";
+}
+
+function trimProfileLocationSuffix(value: string): string {
+  const suffixes = ["特别行政区", "自治区", "自治州", "自治县", "地区", "盟", "省", "市", "区", "县"];
+  const matchedSuffix = suffixes.find((suffix) => value.endsWith(suffix));
+  if (!matchedSuffix) {
+    return value;
+  }
+
+  return value.slice(0, -matchedSuffix.length);
+}
+
+function parseLocationUnits(value: string): Array<{ name: string; suffix: string }> {
+  const units: Array<{ name: string; suffix: string }> = [];
+  const matcher = /(.+?)(特别行政区|自治区|自治州|自治县|地区|盟|省|市|区|县)/g;
+  let match: RegExpExecArray | null;
+
+  while ((match = matcher.exec(value)) !== null) {
+    units.push({
+      name: match[1],
+      suffix: match[2],
+    });
+  }
+
+  return units;
+}
+
+function buildTextStat(value: string): { primary: string; secondary: string; isPlaceholder: boolean } {
+  const trimmed = value.trim();
+  return {
+    primary: trimmed,
+    secondary: "",
+    isPlaceholder: false,
+  };
+}
+
+function buildAgeStat(age: string): { primary: string; secondary: string; isPlaceholder: boolean } {
+  const trimmed = age.trim();
+  return {
+    primary: trimmed ? `${trimmed}岁` : "",
+    secondary: "",
+    isPlaceholder: false,
+  };
+}
+
+function buildLivingLocationStat(value: string): { primary: string; secondary: string; isPlaceholder: boolean } {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return { primary: "", secondary: "", isPlaceholder: true };
+  }
+
+  const units = parseLocationUnits(trimmed);
+  const districtUnit = units.find((unit) => unit.suffix === "区" || unit.suffix === "县");
+  const cityUnit = units.find((unit) => unit.suffix === "市");
+  return {
+    primary: districtUnit?.name ?? cityUnit?.name ?? trimProfileLocationSuffix(trimmed),
+    secondary: "",
+    isPlaceholder: false,
+  };
+}
+
+function buildHometownLocationStat(value: string): { primary: string; secondary: string; isPlaceholder: boolean } {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return { primary: "", secondary: "", isPlaceholder: true };
+  }
+
+  const units = parseLocationUnits(trimmed);
+  const cityUnit = units.find((unit) => unit.suffix === "市");
+  const districtUnit = units.find((unit) => unit.suffix === "区" || unit.suffix === "县");
+  return {
+    primary: cityUnit?.name ?? districtUnit?.name ?? trimProfileLocationSuffix(trimmed),
+    secondary: "",
+    isPlaceholder: false,
+  };
+}
 
 /* 设置菜单项 */
 interface SettingsItem {
@@ -67,7 +151,8 @@ const loggedOutMenuItems: SettingsItem[] = [
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { data, loading } = useTrip();
+  const user = data?.currentUser;
 
   /* 标签颜色视图 */
   const tagViews = user?.tags?.length
@@ -163,9 +248,13 @@ export default function ProfilePage() {
   }
 
   /* ========== 已登录 ========== */
-  const hasIllustration = true;
-  const hasBio = !!user.bio;
-  const hasStats = !!(user.age || user.livingCity || user.hometown);
+  const profileIllustrationUrl = resolveProfileIllustrationUrl(user.homePersonaAssetId);
+  const hasProfileIllustration = !!profileIllustrationUrl;
+  const hasProfileBio = !!user.bio?.trim();
+  const ageStat = buildAgeStat(user.age);
+  const livingStat = buildLivingLocationStat(user.livingCity);
+  const hometownStat = buildHometownLocationStat(user.hometown);
+  const hasProfileStats = !!(ageStat.primary || livingStat.primary || hometownStat.primary);
 
   return (
     <div className={styles.profilePage}>
@@ -186,7 +275,7 @@ export default function ProfilePage() {
       {/* Hero 卡片 */}
       <div
         className={`${styles.hero} ${
-          hasIllustration ? styles.hasIllustration : ""
+          hasProfileIllustration ? styles.hasIllustration : ""
         }`}
       >
         <div className={styles.heroCopy}>
@@ -208,9 +297,9 @@ export default function ProfilePage() {
 
             <div className={styles.main}>
               <div className={styles.name}>{user.nickname}</div>
-              {user.currentTripId && (
+              {data?.currentTrip?.tripMeta.viewerSeatLabel && (
                 <div className={styles.seat}>
-                  座位号:{user.currentTripId}
+                  座位号: {data.currentTrip.tripMeta.viewerSeatLabel}
                 </div>
               )}
             </div>
@@ -239,36 +328,36 @@ export default function ProfilePage() {
           )}
 
           {/* 简介 */}
-          {hasBio && <div className={styles.bio}>{user.bio}</div>}
+          {hasProfileBio && <div className={styles.bio}>{user.bio}</div>}
 
           {/* 统计信息 */}
-          {hasStats && (
+          {hasProfileStats && (
             <div className={styles.stats}>
-              {user.age && (
+              {ageStat.primary && (
                 <>
                   <div className={styles.stat}>
-                    <div className={styles.statValue}>{user.age}</div>
+                    <div className={styles.statValue}>{ageStat.primary}</div>
                     <div className={styles.statLabel}>年龄</div>
                   </div>
-                  {(user.livingCity || user.hometown) && (
+                  {(livingStat.primary || hometownStat.primary) && (
                     <div className={styles.settingsDivider} />
                   )}
                 </>
               )}
-              {user.livingCity && (
+              {livingStat.primary && (
                 <>
                   <div className={styles.stat}>
-                    <div className={styles.statValue}>{user.livingCity}</div>
+                    <div className={styles.statValue}>{livingStat.primary}</div>
                     <div className={styles.statLabel}>居住</div>
                   </div>
-                  {user.hometown && (
+                  {hometownStat.primary && (
                     <div className={styles.settingsDivider} />
                   )}
                 </>
               )}
-              {user.hometown && (
+              {hometownStat.primary && (
                 <div className={styles.stat}>
-                  <div className={styles.statValue}>{user.hometown}</div>
+                  <div className={styles.statValue}>{hometownStat.primary}</div>
                   <div className={styles.statLabel}>来自</div>
                 </div>
               )}
@@ -277,10 +366,10 @@ export default function ProfilePage() {
         </div>
 
         {/* 装饰插图 */}
-        {hasIllustration && (
+        {hasProfileIllustration && (
           <Image
             className={styles.illustration}
-            src="/assets/personas/profile-illustration.svg"
+            src={profileIllustrationUrl}
             alt="装饰"
             width={97}
             height={153}

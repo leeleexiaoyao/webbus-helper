@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireCurrentUser } from "@/src/server/session";
-import { SqliteStore } from "@/src/server/repositories/sqlite-store";
-import { TripService } from "@/src/domain/trip-service";
+import { getDb } from "@/src/server/db";
 
 export async function GET(
   request: NextRequest,
@@ -10,11 +9,26 @@ export async function GET(
   try {
     const userId = await requireCurrentUser();
     const { tripId } = await params;
-    const store = new SqliteStore(userId);
-    const service = new TripService(store);
-
-    const bootstrap = service.bootstrapApp();
-    return NextResponse.json(bootstrap);
+    
+    const db = getDb();
+    const trip = db.prepare(
+      `SELECT id, name, departure_time, status, seat_codes, seat_map 
+       FROM trips 
+       WHERE id = ?`
+    ).get(tripId) as { [key: string]: any };
+    
+    if (!trip) {
+      return NextResponse.json({ error: "车次不存在" }, { status: 404 });
+    }
+    
+    // 解析JSON字段
+    const parsedTrip = {
+      ...trip,
+      seat_codes: JSON.parse(trip.seat_codes as string),
+      seat_map: JSON.parse(trip.seat_map as string)
+    };
+    
+    return NextResponse.json(parsedTrip);
   } catch (error) {
     if ((error as any).message === "UNAUTHORIZED") {
       return NextResponse.json({ error: "请先登录" }, { status: 401 });

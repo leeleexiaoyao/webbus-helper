@@ -3,10 +3,12 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { PageNavbar } from "@/components/PageNavbar/PageNavbar";
+import { useTrip } from "@/src/lib/hooks/use-trip";
 import s from "./page.module.css";
 
 export default function JoinTripPage() {
   const router = useRouter();
+  const { joinTrip } = useTrip();
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [digits, setDigits] = useState<string[]>(Array(6).fill(""));
   const [submitting, setSubmitting] = useState(false);
@@ -105,20 +107,19 @@ export default function JoinTripPage() {
 
     setSubmitting(true);
     try {
-      const res = await fetch("/api/trips/join", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password: code }),
-      });
-      if (!res.ok) throw new Error("加入失败");
-      const data = await res.json();
-      router.push(`/trip/${data.tripId}`);
-    } catch {
-      showToast("口令无效或加入失败");
+      await joinTrip(code);
+      showToast("加入成功");
+      setTimeout(() => {
+        router.push("/");
+      }, 450);
+    } catch (error) {
+      console.log('Join trip error:', error);
+      const errorMessage = error instanceof Error ? error.message : "口令无效或加入失败";
+      showToast(errorMessage);
     } finally {
       setSubmitting(false);
     }
-  }, [code, router, showToast]);
+  }, [code, router, showToast, joinTrip]);
 
   return (
     <div className={s.page}>

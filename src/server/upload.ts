@@ -1,21 +1,25 @@
-import fs from "fs";
-import path from "path";
 import crypto from "crypto";
+import { supabaseAdmin } from "./supabase";
 
-const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads", "avatars");
+const AVATAR_BUCKET = "avatars";
 
-export function ensureUploadDir(): void {
-  if (!fs.existsSync(UPLOAD_DIR)) {
-    fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-  }
-}
-
-export function saveAvatar(userId: string, buffer: Buffer, ext: string): string {
-  ensureUploadDir();
+export async function saveAvatar(userId: string, buffer: Buffer, ext: string): Promise<string> {
   const filename = `${userId}-${crypto.randomBytes(8).toString("hex")}.${ext}`;
-  const filepath = path.join(UPLOAD_DIR, filename);
-  fs.writeFileSync(filepath, buffer);
-  return `/uploads/avatars/${filename}`;
+  const objectPath = `${userId}/${filename}`;
+
+  const { error: uploadError } = await supabaseAdmin.storage
+    .from(AVATAR_BUCKET)
+    .upload(objectPath, buffer, {
+      contentType: `image/${ext === "jpg" ? "jpeg" : ext}`,
+      upsert: true,
+    });
+
+  if (uploadError) {
+    throw uploadError;
+  }
+
+  const { data } = supabaseAdmin.storage.from(AVATAR_BUCKET).getPublicUrl(objectPath);
+  return data.publicUrl;
 }
 
 export function getAllowedImageExt(mimeType: string): string | null {

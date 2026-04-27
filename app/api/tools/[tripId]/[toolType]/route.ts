@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireCurrentUser } from "@/src/server/session";
-import { SqliteStore } from "@/src/server/repositories/sqlite-store";
+import { getStore } from "@/src/server/repositories/sqlite-store";
 import { TripService } from "@/src/domain/trip-service";
 import { BusinessError } from "@/src/domain/errors";
 
@@ -10,9 +10,9 @@ export async function POST(
 ) {
   try {
     const userId = await requireCurrentUser();
-    const { tripId, toolType } = await params;
+    await params; // 确保tripId被解析，但我们不需要它，因为tripService会根据当前用户的状态自动处理
     const body = await request.json();
-    const store = new SqliteStore(userId);
+    const store = getStore(userId);
     const service = new TripService(store);
     const { action, ...input } = body;
 
@@ -29,9 +29,9 @@ export async function POST(
       case "draw-seat":
         return NextResponse.json(service.drawSeat());
       case "reset-seat-draw":
-        return NextResponse.json(service.resetSeatDrawTool());
+        return NextResponse.json(service.resetSeatDraw());
       case "close-seat-draw":
-        return NextResponse.json(service.closeSeatDrawTool());
+        return NextResponse.json(service.closeSeatDraw());
       case "recreate-seat-draw":
         return NextResponse.json(service.recreateSeatDrawTool(input));
 
@@ -43,9 +43,9 @@ export async function POST(
       case "end-vote":
         return NextResponse.json(service.endVote());
       case "reset-vote":
-        return NextResponse.json(service.resetVoteTool());
+        return NextResponse.json(service.resetVote());
       case "close-vote":
-        return NextResponse.json(service.closeVoteTool());
+        return NextResponse.json(service.closeVote());
       case "recreate-vote":
         return NextResponse.json(service.recreateVoteTool(input));
 
@@ -55,9 +55,9 @@ export async function POST(
       case "spin-wheel":
         return NextResponse.json(service.spinWheel(input));
       case "reset-wheel":
-        return NextResponse.json(service.resetWheelTool());
+        return NextResponse.json(service.resetWheel());
       case "close-wheel":
-        return NextResponse.json(service.closeWheelTool());
+        return NextResponse.json(service.closeWheel());
       case "recreate-wheel":
         return NextResponse.json(service.recreateWheelTool(input));
 
@@ -67,9 +67,9 @@ export async function POST(
       case "claim-lottery":
         return NextResponse.json(service.claimLottery(input));
       case "reset-lottery":
-        return NextResponse.json(service.resetLotteryTool());
+        return NextResponse.json(service.resetLottery());
       case "close-lottery":
-        return NextResponse.json(service.closeLotteryTool());
+        return NextResponse.json(service.closeLottery());
       case "recreate-lottery":
         return NextResponse.json(service.recreateLotteryTool(input));
 
@@ -94,11 +94,14 @@ export async function GET(
   try {
     const userId = await requireCurrentUser();
     const { toolType } = await params;
-    const store = new SqliteStore(userId);
+    const store = getStore(userId);
     const service = new TripService(store);
 
-    const toolsPageData = service.getToolsPageData();
-    return NextResponse.json(toolsPageData);
+    const toolDetailData = service.getToolDetailPageData(toolType as any);
+    return NextResponse.json({
+      ...toolDetailData,
+      isStarted: !!toolDetailData.voteDetail || !!toolDetailData.seatDrawDetail || !!toolDetailData.wheelDetail || !!toolDetailData.lotteryDetail
+    });
   } catch (error) {
     if ((error as any).message === "UNAUTHORIZED") {
       return NextResponse.json({ error: "请先登录" }, { status: 401 });

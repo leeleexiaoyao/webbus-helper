@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireCurrentUser } from "@/src/server/session";
 import { saveAvatar, getAllowedImageExt } from "@/src/server/upload";
 import { getDb } from "@/src/server/db";
+import { supabaseAdmin } from "@/src/server/supabase";
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,10 +24,19 @@ export async function POST(request: NextRequest) {
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
-    const avatarUrl = saveAvatar(userId, buffer, ext);
+    const avatarUrl = await saveAvatar(userId, buffer, ext);
+
+    const now = Date.now();
+    const { error: remoteError } = await supabaseAdmin
+      .from("users")
+      .update({ avatar_url: avatarUrl, updated_at: now })
+      .eq("id", userId);
+
+    if (remoteError) {
+      throw remoteError;
+    }
 
     const db = getDb();
-    const now = Date.now();
     db.prepare("UPDATE users SET avatar_url = ?, updated_at = ? WHERE id = ?")
       .run(avatarUrl, now, userId);
 

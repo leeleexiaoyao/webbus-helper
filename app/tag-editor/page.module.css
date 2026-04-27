@@ -1,9 +1,9 @@
+/* 页面容器 */
 .page {
   min-height: 100vh;
-  min-height: 100dvh;
-  padding: 12px 16px calc(env(safe-area-inset-bottom) + 66px);
+  padding: 12px 16px calc(var(--safe-area-inset-bottom, 0) + 66px);
   box-sizing: border-box;
-  background: var(--page-bg-cool, #f4f4f3);
+  background: #f4f4f3;
 }
 
 .content {
@@ -12,8 +12,21 @@
   gap: 14px;
 }
 
-/* ---- Section Title ---- */
-.sectionTitle {
+.loadingWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: #c2c2c2;
+  font-size: 13px;
+}
+
+/* 区块 */
+.section {
+  margin-bottom: 0;
+}
+
+.editorSectionTitle {
   margin-bottom: 8px;
   color: #111111;
   font-size: 14px;
@@ -21,17 +34,16 @@
   line-height: 1.4;
 }
 
-/* ---- Editor Card ---- */
 .editorCard {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 12px;
   border-radius: 0;
   background: transparent;
   overflow: visible;
 }
 
-/* ---- Editor Row ---- */
+/* 编辑行 */
 .editorRow {
   display: flex;
   align-items: center;
@@ -68,6 +80,18 @@
   gap: 6px;
 }
 
+.editorRowValueWrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+  min-width: 0;
+}
+
+.editorRowValueWrapLifted {
+  transform: translateY(-6px);
+}
+
 .editorRowValue {
   max-width: 100%;
   color: #111111;
@@ -93,22 +117,28 @@
   flex-shrink: 0;
 }
 
-/* ---- Avatar ---- */
-.avatar {
+.editorDivider {
+  display: none;
+}
+
+.editorAvatar {
   width: 44px;
   height: 44px;
   border-radius: 50%;
   flex-shrink: 0;
   background: #e5e5e5;
-  object-fit: cover;
 }
 
-.avatarFallback {
-  display: block;
+.editorAvatarFallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 18px;
 }
 
-/* ---- Textarea ---- */
-.textarea {
+/* 文本域 */
+.editorTextarea {
   width: 100%;
   min-height: 72px;
   padding: 14px 16px;
@@ -119,67 +149,59 @@
   font-size: 13px;
   line-height: 1.6;
   border: none;
-  outline: none;
   resize: none;
   font-family: inherit;
 }
 
-.textarea::placeholder {
-  color: #c7c7c7;
-  font-size: 13px;
+.editorTextarea:focus {
+  outline: none;
 }
 
-/* ---- Tag Preview ---- */
+/* 标签列表 */
 .tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 0;
+}
+
+.editorTagList {
   margin-top: 9px;
   gap: 6px;
 }
 
 .tagChip {
   padding: 5px 9px;
+  border-radius: 999px;
   background: #ffffff;
   color: #5e6b7a;
   font-size: 11px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
 }
 
-/* ---- Editor Input (inline) ---- */
-.editorInput {
-  flex: 1;
-  min-width: 0;
-  height: 44px;
-  color: #111111;
-  font-size: 13px;
-  line-height: 1.4;
-  text-align: right;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-family: inherit;
+.editorTagChip {
+  padding: 5px 9px;
+  background: #ffffff;
+  color: #5e6b7a;
+  font-size: 11px;
 }
 
-.editorInput::placeholder {
-  color: #c2c2c2;
-}
-
-/* ---- Save Bar ---- */
-.saveBar {
+/* 保存栏 */
+.editorSaveBar {
   position: fixed;
   left: 16px;
   right: 16px;
-  bottom: calc(env(safe-area-inset-bottom) + 12px);
+  bottom: calc(var(--safe-area-inset-bottom, 0) + 12px);
   z-index: 10;
 }
 
-.saveBtn {
+.editorSaveBtn {
   width: 100%;
   height: 46px;
   margin: 0;
   padding: 0;
+  border: none;
   border-radius: 999px;
-  background: var(--cta-green, #d8f940);
+  background: #d8f940;
   color: #111111;
   display: flex;
   align-items: center;
@@ -187,39 +209,194 @@
   font-size: 16px;
   font-weight: 500;
   box-sizing: border-box;
-  border: none;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: opacity 0.2s;
 }
 
-.saveBtn:active {
-  background: var(--cta-green-hover, #c8eb35);
+.editorSaveBtn:hover {
+  opacity: 0.9;
 }
 
-.saveBtn:disabled {
-  opacity: 0.5;
+.editorSaveBtnDisabled {
+  background: #e5e5e5;
+  color: #999;
   cursor: not-allowed;
 }
 
-/* ---- Toast ---- */
+/* 选择器 */
+.pickerOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.picker {
+  background: #ffffff;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  width: 100%;
+  max-height: 70vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.pickerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.pickerTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111111;
+}
+
+.pickerClose {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #999;
+}
+
+.pickerContent {
+  margin-bottom: 0;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.pickerSection {
+  margin-bottom: 20px;
+}
+
+.pickerSectionTitle {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 8px;
+  padding: 0 16px;
+}
+
+.pickerOption {
+  padding: 14px 16px;
+  font-size: 14px;
+  color: #111111;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.pickerConfirmSection {
+  margin-top: 20px;
+  padding: 0 16px;
+}
+
+.pickerConfirmBtn {
+  width: 100%;
+  padding: 12px;
+  background-color: #d8f940;
+  color: #111111;
+  border: none;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.pickerConfirmBtn:hover {
+  opacity: 0.9;
+}
+
+.pickerOption:hover {
+  background-color: #f5f5f5;
+}
+
+/* 步骤导航 */
+.pickerSteps {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 16px;
+}
+
+.pickerStep {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #999;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.pickerStepActive {
+  color: #111;
+  font-weight: 500;
+  background-color: #f0f0f0;
+}
+
+.pickerStep:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pickerStepDivider {
+  width: 1px;
+  height: 16px;
+  background-color: #f0f0f0;
+  margin: 0 8px;
+}
+
+.pickerOptionActive {
+  background-color: #d8f940;
+}
+
+/* Toast */
 .toast {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  padding: 10px 20px;
-  border-radius: 8px;
   background: rgba(0, 0, 0, 0.7);
   color: #ffffff;
+  padding: 12px 20px;
+  border-radius: 8px;
   font-size: 14px;
-  z-index: 1000;
-  pointer-events: none;
-  animation: toastFade 1.5s ease forwards;
+  z-index: 10000;
+  animation: fadeIn 0.3s ease, fadeOut 0.3s ease 1.7s;
 }
 
-@keyframes toastFade {
-  0% { opacity: 0; }
-  15% { opacity: 1; }
-  70% { opacity: 1; }
-  100% { opacity: 0; }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
 }

@@ -39,6 +39,8 @@ export interface SeatGridProps {
 /* ========== 组件 ========== */
 
 export function SeatGrid({ seatRows, onSeatTap }: SeatGridProps) {
+  // 确保 seatRows 是一个数组
+  const safeSeatRows = Array.isArray(seatRows) ? seatRows : [];
   return (
     <div className={styles.seatGrid}>
       <div className={styles.seatGridFrame}>
@@ -54,10 +56,10 @@ export function SeatGrid({ seatRows, onSeatTap }: SeatGridProps) {
 
         {/* 座位行 */}
         <div className={styles.seatRows}>
-          {seatRows.map((row) => (
+          {safeSeatRows.map((row) => (
             <div key={row.rowNumber} className={styles.seatRow}>
               <div className={styles.rowSlots}>
-                {row.slots.map((slot, slotIndex) => {
+                {(row.slots || []).map((slot, slotIndex) => {
                   /* 过道列 */
                   if (slot === null) {
                     return (

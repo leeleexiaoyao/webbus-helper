@@ -1,4 +1,5 @@
 import { TRIP_TEMPLATES } from "./constants";
+import { BusinessError } from "./errors";
 import type {
   MemberRole,
   MemberView,
@@ -13,7 +14,7 @@ const LETTERS = ["A", "B", "C", "D", "E"];
 export function getTemplateConfig(templateId: TemplateId) {
   const template = TRIP_TEMPLATES.find((item) => item.id === templateId);
   if (!template) {
-    throw new Error(`Unknown template: ${templateId}`);
+    throw new BusinessError("INVALID_TEMPLATE", "请选择座位模板");
   }
   return template;
 }
