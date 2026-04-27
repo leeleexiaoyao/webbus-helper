@@ -6,8 +6,6 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  // serverExternalPackages 用于 better-sqlite3
-  serverExternalPackages: ["better-sqlite3"],
   turbopack: {
     root: __dirname,
   },

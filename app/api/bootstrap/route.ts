@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getCurrentUserId } from "@/src/server/session";
-import { SqliteStore } from "@/src/server/repositories/sqlite-store";
-import { TripService } from "@/src/domain/trip-service";
+import { withSupabaseTripService } from "@/src/server/trip-service-runner";
 
 export async function GET() {
   try {
@@ -9,9 +8,9 @@ export async function GET() {
     if (!userId) {
       return NextResponse.json({ currentUser: null });
     }
-    const store = new SqliteStore(userId);
-    const service = new TripService(store);
-    const result = service.bootstrapApp();
+    const result = await withSupabaseTripService(userId, (service) =>
+      service.bootstrapApp()
+    );
     return NextResponse.json(result);
   } catch (error) {
     return NextResponse.json({ error: "获取失败" }, { status: 500 });

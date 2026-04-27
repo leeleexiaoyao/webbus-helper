@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireCurrentUser } from "@/src/server/session";
+import { withAppLock } from "@/src/server/app-lock";
 import { saveAvatar, getAllowedImageExt } from "@/src/server/upload";
-import { getDb } from "@/src/server/db";
-import { supabaseAdmin } from "@/src/server/supabase";
+import { getSupabaseAdmin } from "@/src/server/supabase";
 
 export async function POST(request: NextRequest) {
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     const userId = await requireCurrentUser();
     const formData = await request.formData();
     const file = formData.get("avatar") as File | null;
@@ -27,18 +28,17 @@ export async function POST(request: NextRequest) {
     const avatarUrl = await saveAvatar(userId, buffer, ext);
 
     const now = Date.now();
-    const { error: remoteError } = await supabaseAdmin
-      .from("users")
-      .update({ avatar_url: avatarUrl, updated_at: now })
-      .eq("id", userId);
+    const remoteError = await withAppLock(async () => {
+      const { error } = await supabaseAdmin
+        .from("users")
+        .update({ avatar_url: avatarUrl, updated_at: now })
+        .eq("id", userId);
+      return error;
+    });
 
     if (remoteError) {
       throw remoteError;
     }
-
-    const db = getDb();
-    db.prepare("UPDATE users SET avatar_url = ?, updated_at = ? WHERE id = ?")
-      .run(avatarUrl, now, userId);
 
     return NextResponse.json({ avatarUrl });
   } catch (error: any) {

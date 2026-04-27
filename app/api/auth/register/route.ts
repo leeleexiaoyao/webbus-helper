@@ -1,30 +1,44 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getDb } from "@/src/server/db";
 import { hashPassword, createSession } from "@/src/server/auth";
 import { getSessionCookieName } from "@/src/server/session";
 import { createId } from "@/src/domain/id";
-import { supabaseAdmin } from "@/src/server/supabase";
+import { getSupabaseAdmin } from "@/src/server/supabase";
 
 export async function POST(request: NextRequest) {
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     const body = await request.json();
     const { nickname, password, avatarUrl } = body;
+    const normalizedNickname = nickname?.trim();
 
-    if (!nickname?.trim()) {
+    if (!normalizedNickname) {
       return NextResponse.json({ error: "请填写昵称" }, { status: 400 });
     }
     if (!password || password.length < 6) {
       return NextResponse.json({ error: "密码至少6位" }, { status: 400 });
     }
 
-    const db = getDb();
+    const { data: existingUsers, error: existingUsersError } = await supabaseAdmin
+      .from("users")
+      .select("id")
+      .eq("nickname", normalizedNickname)
+      .limit(1);
+
+    if (existingUsersError) {
+      throw existingUsersError;
+    }
+
+    if (existingUsers && existingUsers.length > 0) {
+      return NextResponse.json({ error: "用户已存在" }, { status: 409 });
+    }
+
     const userId = createId("user");
     const passwordHash = await hashPassword(password);
     const now = Date.now();
 
     const { error: remoteError } = await supabaseAdmin.from("users").insert({
       id: userId,
-      nickname: nickname.trim(),
+      nickname: normalizedNickname,
       avatar_url: avatarUrl || "",
       password_hash: passwordHash,
       home_persona_asset_id: null,
@@ -46,14 +60,9 @@ export async function POST(request: NextRequest) {
       throw remoteError;
     }
 
-    db.prepare(
-      `INSERT INTO users (id, nickname, avatar_url, password_hash, home_persona_asset_id, bio, living_city, hometown, age, tags, current_trip_id, is_authorized, created_at, updated_at)
-       VALUES (?, ?, ?, ?, NULL, '', '', '', '', '[]', NULL, 1, ?, ?)`
-    ).run(userId, nickname.trim(), avatarUrl || "", passwordHash, now, now);
-
     const { sessionId } = await createSession(userId);
     const response = NextResponse.json({
-      user: { id: userId, nickname: nickname.trim(), avatarUrl: avatarUrl || "" },
+      user: { id: userId, nickname: normalizedNickname, avatarUrl: avatarUrl || "" },
     });
 
     response.cookies.set(getSessionCookieName(), sessionId, {

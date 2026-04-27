@@ -1,19 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireCurrentUser } from "@/src/server/session";
-import { getStore } from "@/src/server/repositories/sqlite-store";
-import { TripService } from "@/src/domain/trip-service";
+import { withSupabaseTripService } from "@/src/server/trip-service-runner";
 import { BusinessError } from "@/src/domain/errors";
 
 export async function POST(request: NextRequest) {
   try {
     const userId = await requireCurrentUser();
-    const store = getStore(userId);
-    const service = new TripService(store);
-    
     const body = await request.json();
     const { homePersonaAssetId } = body;
-    
-    const result = service.updateHomePersona(homePersonaAssetId);
+
+    const result = await withSupabaseTripService(userId, (service) =>
+      service.updateHomePersona(homePersonaAssetId)
+    );
     return NextResponse.json(result);
   } catch (error) {
     if (error instanceof BusinessError) {

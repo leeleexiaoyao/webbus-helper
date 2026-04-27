@@ -1,34 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireCurrentUser } from "@/src/server/session";
-import { getDb } from "@/src/server/db";
+import { getSupabaseAdmin } from "@/src/server/supabase";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ tripId: string }> }
 ) {
   try {
-    const userId = await requireCurrentUser();
+    await requireCurrentUser();
     const { tripId } = await params;
-    
-    const db = getDb();
-    const trip = db.prepare(
-      `SELECT id, name, departure_time, status, seat_codes, seat_map 
-       FROM trips 
-       WHERE id = ?`
-    ).get(tripId) as { [key: string]: any };
-    
+    const supabaseAdmin = getSupabaseAdmin();
+    const { data: trip, error } = await supabaseAdmin
+      .from("trips")
+      .select("id, name, departure_time, status, seat_codes, seat_map")
+      .eq("id", tripId)
+      .maybeSingle();
+
+    if (error) {
+      throw error;
+    }
+
     if (!trip) {
       return NextResponse.json({ error: "车次不存在" }, { status: 404 });
     }
-    
-    // 解析JSON字段
-    const parsedTrip = {
-      ...trip,
-      seat_codes: JSON.parse(trip.seat_codes as string),
-      seat_map: JSON.parse(trip.seat_map as string)
-    };
-    
-    return NextResponse.json(parsedTrip);
+
+    return NextResponse.json(trip);
   } catch (error) {
     if ((error as any).message === "UNAUTHORIZED") {
       return NextResponse.json({ error: "请先登录" }, { status: 401 });

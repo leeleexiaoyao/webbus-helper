@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifyPassword, createSession } from "@/src/server/auth";
 import { getSessionCookieName } from "@/src/server/session";
-import { supabaseAdmin } from "@/src/server/supabase";
-import { getDb } from "@/src/server/db";
+import { getSupabaseAdmin } from "@/src/server/supabase";
 
 export async function POST(request: NextRequest) {
   try {
+    const supabaseAdmin = getSupabaseAdmin();
     const body = await request.json();
     const { nickname, password } = body;
 
@@ -33,15 +33,11 @@ export async function POST(request: NextRequest) {
     }
 
     const { sessionId } = await createSession(user.id);
-    const db = getDb();
-    const localUser = db
-      .prepare("SELECT id, nickname, avatar_url FROM users WHERE id = ?")
-      .get(user.id) as any;
     const response = NextResponse.json({
       user: {
         id: user.id,
-        nickname: localUser?.nickname ?? user.nickname,
-        avatarUrl: localUser?.avatar_url ?? user.avatar_url,
+        nickname: user.nickname,
+        avatarUrl: user.avatar_url,
       },
     });
 

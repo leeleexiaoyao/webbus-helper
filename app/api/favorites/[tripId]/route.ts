@@ -1,22 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireCurrentUser } from "@/src/server/session";
-import { SqliteStore } from "@/src/server/repositories/sqlite-store";
-import { TripService } from "@/src/domain/trip-service";
+import { withSupabaseTripService } from "@/src/server/trip-service-runner";
 import { BusinessError } from "@/src/domain/errors";
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ tripId: string }> }
-) {
+  ) {
   try {
     const userId = await requireCurrentUser();
-    const { tripId } = await params;
     const body = await request.json();
-    const store = new SqliteStore(userId);
-    const service = new TripService(store);
+    await params;
 
     if (body.action === "toggle") {
-      const result = service.toggleFavoriteMember(body.targetUserId);
+      const result = await withSupabaseTripService(userId, (service) =>
+        service.toggleFavoriteMember(body.targetUserId)
+      );
       return NextResponse.json(result);
     }
 
@@ -38,10 +37,9 @@ export async function GET(
 ) {
   try {
     const userId = await requireCurrentUser();
-    const store = new SqliteStore(userId);
-    const service = new TripService(store);
-
-    const favoritesData = service.getFavoritesPageData();
+    const favoritesData = await withSupabaseTripService(userId, (service) =>
+      service.getFavoritesPageData()
+    );
     return NextResponse.json(favoritesData);
   } catch (error) {
     if ((error as any).message === "UNAUTHORIZED") {

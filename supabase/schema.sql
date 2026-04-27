@@ -15,6 +15,8 @@ create table if not exists users (
   updated_at bigint not null
 );
 
+create unique index if not exists idx_users_nickname_unique on users (nickname);
+
 create table if not exists sessions (
   id text primary key,
   user_id text not null references users(id) on delete cascade,

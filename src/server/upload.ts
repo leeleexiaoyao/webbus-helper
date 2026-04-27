@@ -1,9 +1,10 @@
 import crypto from "crypto";
-import { supabaseAdmin } from "./supabase";
+import { getSupabaseAdmin } from "./supabase";
 
 const AVATAR_BUCKET = "avatars";
 
 export async function saveAvatar(userId: string, buffer: Buffer, ext: string): Promise<string> {
+  const supabaseAdmin = getSupabaseAdmin();
   const filename = `${userId}-${crypto.randomBytes(8).toString("hex")}.${ext}`;
   const objectPath = `${userId}/${filename}`;
 

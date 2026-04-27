@@ -1,16 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireCurrentUser } from "@/src/server/session";
-import { getStore } from "@/src/server/repositories/sqlite-store";
-import { TripService } from "@/src/domain/trip-service";
+import { withSupabaseTripService } from "@/src/server/trip-service-runner";
 import { BusinessError } from "@/src/domain/errors";
 
 export async function GET(request: NextRequest) {
   try {
     const userId = await requireCurrentUser();
-    const store = getStore(userId);
-    const service = new TripService(store);
-    
-    const result = service.getFavoritesPageData();
+    const result = await withSupabaseTripService(userId, (service) =>
+      service.getFavoritesPageData()
+    );
     return NextResponse.json(result);
   } catch (error) {
     if (error instanceof BusinessError) {

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireCurrentUser } from "@/src/server/session";
-import { getStore } from "@/src/server/repositories/sqlite-store";
-import { TripService } from "@/src/domain/trip-service";
+import { withSupabaseTripService } from "@/src/server/trip-service-runner";
 import { BusinessError } from "@/src/domain/errors";
 
 export async function POST(
@@ -10,72 +9,74 @@ export async function POST(
 ) {
   try {
     const userId = await requireCurrentUser();
-    await params; // 确保tripId被解析，但我们不需要它，因为tripService会根据当前用户的状态自动处理
+    await params;
     const body = await request.json();
-    const store = getStore(userId);
-    const service = new TripService(store);
     const { action, ...input } = body;
 
-    switch (action) {
+    const result = await withSupabaseTripService(userId, (service) => {
+      switch (action) {
       // 随机抽号
       case "publish-seat-draw":
-        return NextResponse.json(service.publishSeatDrawTool(input));
+          return service.publishSeatDrawTool(input);
       case "start-seat-draw":
-        return NextResponse.json(service.startSeatDrawRound());
+          return service.startSeatDrawRound();
       case "advance-seat-draw":
-        return NextResponse.json(service.advanceSeatDrawRollingFrame());
+          return service.advanceSeatDrawRollingFrame();
       case "finalize-seat-draw":
-        return NextResponse.json(service.finalizeSeatDrawRoundIfDue());
+          return service.finalizeSeatDrawRoundIfDue();
       case "draw-seat":
-        return NextResponse.json(service.drawSeat());
+          return service.drawSeat();
       case "reset-seat-draw":
-        return NextResponse.json(service.resetSeatDraw());
+          return service.resetSeatDraw();
       case "close-seat-draw":
-        return NextResponse.json(service.closeSeatDraw());
+          return service.closeSeatDraw();
       case "recreate-seat-draw":
-        return NextResponse.json(service.recreateSeatDrawTool(input));
+          return service.recreateSeatDrawTool(input);
 
       // 投票
       case "publish-vote":
-        return NextResponse.json(service.publishVoteTool(input));
+          return service.publishVoteTool(input);
       case "submit-vote":
-        return NextResponse.json(service.submitVote(input));
+          return service.submitVote(input);
       case "end-vote":
-        return NextResponse.json(service.endVote());
+          return service.endVote();
       case "reset-vote":
-        return NextResponse.json(service.resetVote());
+          return service.resetVote();
       case "close-vote":
-        return NextResponse.json(service.closeVote());
+          return service.closeVote();
       case "recreate-vote":
-        return NextResponse.json(service.recreateVoteTool(input));
+          return service.recreateVoteTool(input);
 
       // 大转盘
       case "publish-wheel":
-        return NextResponse.json(service.publishWheelTool(input));
+          return service.publishWheelTool(input);
       case "spin-wheel":
-        return NextResponse.json(service.spinWheel(input));
+          return service.spinWheel(input.selectedIndex);
       case "reset-wheel":
-        return NextResponse.json(service.resetWheel());
+          return service.resetWheel();
       case "close-wheel":
-        return NextResponse.json(service.closeWheel());
+          return service.closeWheel();
       case "recreate-wheel":
-        return NextResponse.json(service.recreateWheelTool(input));
+          return service.recreateWheelTool(input);
 
       // 幸运签
       case "publish-lottery":
-        return NextResponse.json(service.publishLotteryTool(input));
+          return service.publishLotteryTool(input);
       case "claim-lottery":
-        return NextResponse.json(service.claimLottery(input));
+          return service.claimLottery(input.cardId);
       case "reset-lottery":
-        return NextResponse.json(service.resetLottery());
+          return service.resetLottery();
       case "close-lottery":
-        return NextResponse.json(service.closeLottery());
+          return service.closeLottery();
       case "recreate-lottery":
-        return NextResponse.json(service.recreateLotteryTool(input));
+          return service.recreateLotteryTool(input);
 
       default:
-        return NextResponse.json({ error: "未知操作" }, { status: 400 });
-    }
+          throw new BusinessError("INVALID_ACTION", "未知操作");
+      }
+    });
+
+    return NextResponse.json(result);
   } catch (error) {
     if (error instanceof BusinessError) {
       return NextResponse.json({ error: error.message }, { status: 400 });
@@ -94,10 +95,9 @@ export async function GET(
   try {
     const userId = await requireCurrentUser();
     const { toolType } = await params;
-    const store = getStore(userId);
-    const service = new TripService(store);
-
-    const toolDetailData = service.getToolDetailPageData(toolType as any);
+    const toolDetailData = await withSupabaseTripService(userId, (service) =>
+      service.getToolDetailPageData(toolType as any)
+    );
     return NextResponse.json({
       ...toolDetailData,
       isStarted: !!toolDetailData.voteDetail || !!toolDetailData.seatDrawDetail || !!toolDetailData.wheelDetail || !!toolDetailData.lotteryDetail

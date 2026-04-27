@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireCurrentUser } from "@/src/server/session";
-import { SqliteStore } from "@/src/server/repositories/sqlite-store";
-import { TripService } from "@/src/domain/trip-service";
+import { withSupabaseTripService } from "@/src/server/trip-service-runner";
 
 export async function GET(
   request: NextRequest,
@@ -9,11 +8,11 @@ export async function GET(
 ) {
   try {
     const userId = await requireCurrentUser();
-    const { tripId } = await params;
-    const store = new SqliteStore(userId);
-    const service = new TripService(store);
+    await params;
 
-    const settings = service.getTripSettings();
+    const settings = await withSupabaseTripService(userId, (service) =>
+      service.getTripSettings()
+    );
     return NextResponse.json(settings);
   } catch (error) {
     if ((error as any).message === "UNAUTHORIZED") {

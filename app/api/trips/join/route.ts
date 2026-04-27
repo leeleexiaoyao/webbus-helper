@@ -1,18 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireCurrentUser } from "@/src/server/session";
-import { getStore } from "@/src/server/repositories/sqlite-store";
-import { TripService } from "@/src/domain/trip-service";
+import { withSupabaseTripService } from "@/src/server/trip-service-runner";
 import { BusinessError } from "@/src/domain/errors";
 
 export async function POST(request: NextRequest) {
   try {
     const userId = await requireCurrentUser();
     const body = await request.json();
-    const store = getStore(userId);
-    const service = new TripService(store);
-
-    service.ensureAuthorizedAccess();
-    service.joinTripByPassword(body.password);
+    await withSupabaseTripService(userId, (service) => {
+      service.ensureAuthorizedAccess();
+      service.joinTripByPassword(body.password);
+    });
 
     return NextResponse.json({ success: true });
   } catch (error) {

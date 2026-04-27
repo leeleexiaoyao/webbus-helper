@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import { supabaseAdmin } from "./supabase";
+import { getSupabaseAdmin } from "./supabase";
 
 const SALT_ROUNDS = 10;
 const SESSION_DURATION_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
@@ -14,6 +14,7 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 }
 
 export async function createSession(userId: string): Promise<{ sessionId: string; expiresAt: number }> {
+  const supabaseAdmin = getSupabaseAdmin();
   const sessionId = crypto.randomBytes(32).toString("hex");
   const now = Date.now();
   const expiresAt = now + SESSION_DURATION_MS;
@@ -33,6 +34,7 @@ export async function createSession(userId: string): Promise<{ sessionId: string
 }
 
 export async function getSessionUserId(sessionId: string): Promise<string | null> {
+  const supabaseAdmin = getSupabaseAdmin();
   const now = Date.now();
   const { data, error } = await supabaseAdmin
     .from("sessions")
@@ -49,6 +51,7 @@ export async function getSessionUserId(sessionId: string): Promise<string | null
 }
 
 export async function deleteSession(sessionId: string): Promise<void> {
+  const supabaseAdmin = getSupabaseAdmin();
   const { error } = await supabaseAdmin.from("sessions").delete().eq("id", sessionId);
   if (error) {
     throw error;
@@ -56,6 +59,7 @@ export async function deleteSession(sessionId: string): Promise<void> {
 }
 
 export async function cleanExpiredSessions(): Promise<void> {
+  const supabaseAdmin = getSupabaseAdmin();
   const { error } = await supabaseAdmin
     .from("sessions")
     .delete()

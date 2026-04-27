@@ -1,25 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireCurrentUser } from "@/src/server/session";
-import { getStore } from "@/src/server/repositories/sqlite-store";
-import { TripService } from "@/src/domain/trip-service";
+import { withSupabaseTripService } from "@/src/server/trip-service-runner";
 import { BusinessError } from "@/src/domain/errors";
 
 export async function POST(request: NextRequest) {
   try {
     const userId = await requireCurrentUser();
     const body = await request.json();
-    
-    const store = getStore(userId);
-    const tripService = new TripService(store);
-    
-    // 使用服务层创建车次
-    const result = tripService.createTrip({
-      tripName: body.tripName,
-      departureTime: body.departureTime,
-      password: body.password,
-      templateId: body.templateId
-    });
-    
+
+    const result = await withSupabaseTripService(userId, (tripService) =>
+      tripService.createTrip({
+        tripName: body.tripName,
+        departureTime: body.departureTime,
+        password: body.password,
+        templateId: body.templateId,
+      })
+    );
+
     return NextResponse.json({ success: true, tripId: result.currentTrip?.tripMeta.tripId });
   } catch (error) {
     console.log('Create trip error:', error);
