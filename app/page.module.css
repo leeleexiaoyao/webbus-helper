@@ -1,0 +1,408 @@
+/* ========== 首页样式 ========== */
+
+.homePage {
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+  padding: 0 0 calc(env(safe-area-inset-bottom) + 20px);
+  background: #f3f2ef;
+  overflow-x: hidden;
+}
+
+/* 顶部渐变背景 hero 区 */
+.bgHero {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 227px;
+  background: linear-gradient(180deg, #ecfbbb 0%, #f4f4f3 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ========== 头部区域 ========== */
+.header {
+  padding: 0 16px;
+  margin-top: -22px;
+  min-height: 68px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.headerCopy {
+  position: relative;
+  z-index: 1;
+  max-width: calc(100% - 118px);
+}
+
+.title {
+  color: #111111;
+  font-size: 28px;
+  line-height: 1.18;
+  font-weight: 900;
+  word-break: break-all;
+}
+
+.subtitle {
+  margin-top: 5px;
+  color: #6f7783;
+  font-size: 12px;
+  line-height: 1.38;
+}
+
+.headerFigure {
+  position: absolute;
+  right: 59px;
+  top: -1px;
+  width: 118px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ========== 用户卡片 ========== */
+.userCard {
+  margin: 11px 16px 0;
+  padding: 11px 13px;
+  border-radius: 17px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.userMain {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex: 1;
+  min-width: 0;
+}
+
+.userAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #dde8ef;
+  object-fit: cover;
+}
+
+.avatarFallback {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  background: #dfe4ec;
+  color: transparent;
+  font-size: 0;
+  box-shadow: inset 0 0 0 1px rgba(117, 122, 134, 0.08);
+}
+
+.avatarFallback::before {
+  content: "";
+  position: absolute;
+  top: 22%;
+  left: 50%;
+  width: 32%;
+  height: 32%;
+  border-radius: 50%;
+  background: #bcc4d0;
+  transform: translateX(-50%);
+}
+
+.avatarFallback::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 15%;
+  width: 56%;
+  height: 28%;
+  border-radius: 999px 999px 5.5px 5.5px;
+  background: #bcc4d0;
+  transform: translateX(-50%);
+}
+
+.userCopy {
+  min-width: 0;
+  flex: 1;
+}
+
+.userGreeting {
+  color: #111111;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.userWish {
+  margin-top: 5px;
+  color: #8c9199;
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+/* 座位摘要胶囊 */
+.seatSummary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 78px;
+  min-height: 44px;
+  padding: 2px 9px 3px;
+  border-radius: 999px;
+  background: #dfff27;
+  flex-shrink: 0;
+}
+
+.seatTag {
+  color: #111111;
+  font-size: 9px;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  transform: translateY(-10px);
+}
+
+.seatValue {
+  margin-top: -6px;
+  max-width: 100%;
+  color: #111111;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 700;
+  text-align: center;
+}
+
+.seatValuePlaceholder {
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+/* ========== 面板区域 ========== */
+.tripPanel {
+  margin: 13px 16px 0;
+  padding: 14px 12px 12px;
+  min-height: calc(100vh - 205px);
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.tripTabs {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 0 12px;
+}
+
+.tabsLeft {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 9px;
+  color: #7c8390;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  cursor: pointer;
+  user-select: none;
+  border: none;
+  background: none;
+}
+
+.tabActive {
+  color: #111111;
+  font-weight: 700;
+}
+
+.tabLine {
+  position: absolute;
+  left: 50%;
+  bottom: -1px;
+  width: 26px;
+  height: 3px;
+  border-radius: 2px;
+  background: #111111;
+  transform: translateX(-50%);
+}
+
+.tabsStat {
+  color: #b6bac1;
+  font-size: 12px;
+  line-height: 1.2;
+  transform: translateY(-1px);
+}
+
+.tripContentCard {
+  margin-top: 0;
+  margin-left: -12px;
+  margin-right: -12px;
+  padding: 0 10px 4px;
+  overflow: visible;
+}
+
+/* ========== 引导卡片（无车次） ========== */
+.entryCard {
+  min-height: calc(100vh - 180px);
+  padding: 0 12px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.entryTitle {
+  color: #111111;
+  font-size: 20px;
+  line-height: 1.25;
+  font-weight: 700;
+  text-align: center;
+}
+
+.entryCopy {
+  margin-top: 8px;
+  color: #6f7783;
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.entryActions {
+  width: 100%;
+  max-width: 260px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.entryPrimaryBtn {
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 44px;
+  box-sizing: border-box;
+  background: #d8f940;
+  color: #111111;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  transition: opacity 0.2s;
+}
+
+.entryPrimaryBtn:active {
+  opacity: 0.7;
+}
+
+.entrySecondaryBtn {
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 44px;
+  box-sizing: border-box;
+  background: #ffffff;
+  color: #111111;
+  border: 1px solid #e8ecf1;
+  cursor: pointer;
+  text-align: center;
+  transition: opacity 0.2s;
+}
+
+.entrySecondaryBtn:active {
+  opacity: 0.7;
+}
+
+/* ========== 登录引导 ========== */
+.loginGuide {
+  min-height: calc(100vh - 180px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  padding: 0 12px;
+}
+
+.loginTitle {
+  color: #111111;
+  font-size: 20px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.loginCopy {
+  margin-top: 8px;
+  color: #6f7783;
+  font-size: 12px;
+  text-align: center;
+}
+
+.loginBtn {
+  margin-top: 24px;
+  padding: 14px 40px;
+  border-radius: 999px;
+  background: #d8f940;
+  color: #111111;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.loginBtn:active {
+  opacity: 0.7;
+}
+
+/* ========== 加载状态 ========== */
+.loadingWrap {
+  min-height: calc(100vh - 180px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* ========== 桌面端适配 ========== */
+@media (min-width: 768px) {
+  .homePage {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+}

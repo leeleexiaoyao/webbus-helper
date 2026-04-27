@@ -1,0 +1,192 @@
+/* ========== 座位网格组件样式 ========== */
+
+.seatGrid {
+  width: 100%;
+  padding: 12px 0 4px;
+  box-sizing: border-box;
+}
+
+.seatGridFrame {
+  position: relative;
+}
+
+/* 过道虚线 */
+.aisleOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 65px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.aisleLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: repeating-linear-gradient(
+    to bottom,
+    #d7dce5 0,
+    #d7dce5 8px,
+    transparent 8px,
+    transparent 15px
+  );
+}
+
+.aisleLineLeft {
+  left: calc(50% - 24.5px);
+}
+
+.aisleLineRight {
+  left: calc(50% + 24.5px);
+}
+
+/* 行容器 */
+.seatRows {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  position: relative;
+  z-index: 1;
+}
+
+.seatRow {
+  display: block;
+}
+
+.rowSlots {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 9px;
+}
+
+/* 座位卡片 */
+.seatCard {
+  min-height: 52px;
+  width: calc(100% - 16px);
+  justify-self: center;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  border: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.seatCard:active {
+  opacity: 0.7;
+}
+
+.seatShellImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* 头像徽章 */
+.seatAvatarBadge {
+  position: absolute;
+  top: 3px;
+  right: -1px;
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.seatAvatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.seatAvatarFallback {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #6fb9ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 8px;
+  font-weight: 600;
+}
+
+/* 角色/我 徽章 */
+.seatBadge {
+  position: absolute;
+  top: 3px;
+  right: -1px;
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  background: #111111;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ffffff;
+  box-sizing: border-box;
+}
+
+/* 座位编号 */
+.seatCode {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1;
+  font-weight: 500;
+  color: #9aa1a9;
+}
+
+/* 已入座状态 */
+.isOccupied .seatCode {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* 我/管理员状态 */
+.isMine .seatCode,
+.isAdmin .seatCode {
+  color: #111111;
+}
+
+/* 过道 */
+.aisle {
+  min-height: 52px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.aisleLabel {
+  position: relative;
+  z-index: 1;
+  color: #9aa1a9;
+  font-size: 11px;
+  line-height: 1;
+  padding: 0;
+}

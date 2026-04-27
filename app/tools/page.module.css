@@ -1,0 +1,221 @@
+/* ========== 工具页样式 ========== */
+
+.toolsPage {
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+  padding: 0 16px calc(env(safe-area-inset-bottom) + 24px);
+  background: #f4f4f3;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* 顶部渐变背景 hero 区 */
+.bgHero {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 227px;
+  background: linear-gradient(180deg, #ecfbbb 0%, #f4f4f3 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ========== 头部 ========== */
+.toolsHeader {
+  margin-top: -22px;
+  position: relative;
+  z-index: 1;
+}
+
+.toolsTitle {
+  color: #111111;
+  font-size: 28px;
+  line-height: 1.18;
+  font-weight: 900;
+}
+
+.toolsSubtitle {
+  margin-top: 5px;
+  color: #6f7783;
+  font-size: 12px;
+  line-height: 1.38;
+}
+
+/* ========== 工具卡片网格 ========== */
+.toolGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 155px);
+  gap: 16px;
+  margin-top: 39px;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* ========== 工具卡片 ========== */
+.toolCard {
+  position: relative;
+  width: 155px;
+  height: 220px;
+  padding: 16px;
+  border-radius: 20px;
+  border: 2px solid transparent;
+  overflow: hidden;
+  box-sizing: border-box;
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.toolCard:active {
+  transform: scale(0.97);
+}
+
+.toolCardBody {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.toolTitle {
+  color: #111111;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.toolDescription {
+  margin-top: 4px;
+  max-width: 120px;
+  color: #6f7783;
+  font-size: 12px;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+/* CTA 按钮 - 毛玻璃效果 */
+.toolCta {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  z-index: 3;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid #ffffff;
+  color: #2f2f2f;
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 700;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+.toolCtaIcon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.toolImage {
+  position: absolute;
+  right: 0;
+  top: 78px;
+  width: 142px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ========== 主题色变体 ========== */
+
+/* 随机抽 - 暖黄 */
+.toolCardVote {
+  background-image:
+    linear-gradient(180deg, #ffebb5 0%, #ffffff 100%),
+    linear-gradient(180deg, #ffffff 0%, #ffffff 42%, #fffaf0 66%, #fcf3db 100%);
+}
+
+.toolCardVote .toolCta {
+  background: rgba(255, 239, 196, 0.6);
+}
+
+/* 做选择 - 浅绿 */
+.toolCardSeatDraw {
+  background-image:
+    linear-gradient(180deg, #eaffba 0%, #fefefe 100%),
+    linear-gradient(180deg, #ffffff 0%, #ffffff 42%, #f8fce8 66%, #eff9cc 100%);
+}
+
+.toolCardSeatDraw .toolCta {
+  background: rgba(248, 255, 218, 0.6);
+}
+
+/* 大转盘 - 浅蓝 */
+.toolCardLottery {
+  background-image:
+    linear-gradient(180deg, #ddf2fb 0%, #e8f6fc 47%, #ffffff 100%),
+    linear-gradient(180deg, #ffffff 0%, #ffffff 42%, #f2fbfe 66%, #e2f6fd 100%);
+}
+
+.toolCardLottery .toolCta {
+  background: rgba(212, 241, 255, 0.6);
+}
+
+/* 幸运签 - 浅紫 */
+.toolCardWheel {
+  background-image:
+    linear-gradient(180deg, #efe8f9 0%, #ffffff 100%),
+    linear-gradient(180deg, #ffffff 0%, #ffffff 42%, #faf6ff 66%, #f2eafb 100%);
+}
+
+.toolCardWheel .toolCta {
+  background: rgba(238, 222, 255, 0.6);
+}
+
+/* ========== 空状态 ========== */
+.toolsEmptyState {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.toolsEmptyLabel {
+  color: #2a3234;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* ========== 加载状态 ========== */
+.loadingWrap {
+  min-height: calc(100vh - 180px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* ========== 桌面端适配 ========== */
+@media (min-width: 768px) {
+  .toolsPage {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+}

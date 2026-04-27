@@ -1,0 +1,90 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  animation: overlayFadeIn 200ms ease-out;
+}
+
+.modal {
+  width: 280px;
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  animation: modalSlideIn 200ms ease-out;
+}
+
+.title {
+  padding: 24px 24px 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: #1f2539;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.content {
+  padding: 12px 24px 24px;
+  font-size: 15px;
+  color: #757a86;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  border-top: 1px solid #ededed;
+}
+
+.cancelBtn,
+.confirmBtn {
+  flex: 1;
+  height: 48px;
+  border: none;
+  background: #ffffff;
+  font-size: 17px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 150ms;
+}
+
+.cancelBtn {
+  color: #1f2539;
+  border-right: 1px solid #ededed;
+}
+
+.cancelBtn:active {
+  background: #f7f7f7;
+}
+
+.confirmBtn {
+  color: #1f2539;
+  font-weight: 500;
+}
+
+.confirmBtn:active {
+  background: #f7f7f7;
+}
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

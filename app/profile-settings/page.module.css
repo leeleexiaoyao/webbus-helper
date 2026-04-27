@@ -1,0 +1,101 @@
+/* ========== 个人设置页样式 ========== */
+
+.page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #f4f4f3;
+  box-sizing: border-box;
+}
+
+.content {
+  padding: 14px 16px calc(env(safe-area-inset-bottom) + 24px);
+  box-sizing: border-box;
+}
+
+/* ========== 关于卡片 ========== */
+.aboutCard,
+.actionCard {
+  border-radius: 20px;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.aboutCard {
+  padding: 17px 15px;
+}
+
+.pageTitle {
+  color: #111111;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.pageCopy {
+  margin-top: 9px;
+  color: #6f7783;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* ========== 操作卡片 ========== */
+.actionCard {
+  margin-top: 12px;
+  padding: 12px;
+}
+
+.tripAction {
+  width: 100%;
+  margin: 0;
+}
+
+/* ========== 按钮样式 ========== */
+.dangerBtn {
+  display: block;
+  width: 100%;
+  min-height: 0;
+  padding: 16px 12px;
+  border-radius: 999px;
+  border: none;
+  background: #d34f3d;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: center;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: opacity 0.2s;
+}
+
+.dangerBtn:active {
+  opacity: 0.7;
+}
+
+.secondaryBtn {
+  display: block;
+  width: 100%;
+  min-height: 0;
+  padding: 16px 12px;
+  border-radius: 999px;
+  border: 1px solid #ededed;
+  background: #ffffff;
+  color: #1f2539;
+  font-size: 14px;
+  font-weight: 400;
+  text-align: center;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: opacity 0.2s;
+}
+
+.secondaryBtn:active {
+  opacity: 0.7;
+}
+
+/* ========== 桌面端适配 ========== */
+@media (min-width: 768px) {
+  .page {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+}

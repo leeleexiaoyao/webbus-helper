@@ -1,0 +1,90 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.5);
+  animation: overlayFadeIn 200ms ease-out;
+}
+
+.sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0 0 env(safe-area-inset-bottom, 0px);
+  animation: sheetSlideUp 250ms ease-out;
+}
+
+.description {
+  padding: 16px 16px 8px;
+  font-size: 13px;
+  color: #757a86;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.actions {
+  background: #ffffff;
+  border-radius: 12px;
+  margin: 0 8px;
+  overflow: hidden;
+}
+
+.actionItem {
+  display: block;
+  width: 100%;
+  height: 56px;
+  border: none;
+  background: #ffffff;
+  font-size: 17px;
+  color: #1f2539;
+  cursor: pointer;
+  transition: background 150ms;
+  border-bottom: 1px solid #ededed;
+  padding: 0;
+}
+
+.actionItem:last-child {
+  border-bottom: none;
+}
+
+.actionItem:active {
+  background: #f7f7f7;
+}
+
+.cancelBtn {
+  display: block;
+  width: calc(100% - 16px);
+  margin: 8px auto 0;
+  height: 56px;
+  border: none;
+  background: #ffffff;
+  border-radius: 12px;
+  font-size: 17px;
+  color: #1f2539;
+  cursor: pointer;
+  transition: background 150ms;
+  padding: 0;
+}
+
+.cancelBtn:active {
+  background: #f7f7f7;
+}
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sheetSlideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

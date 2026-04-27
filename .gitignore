@@ -1,0 +1,13 @@
+.next
+node_modules
+*.log
+coverage
+test-results
+playwright-report
+public/uploads/avatars/*
+!public/uploads/avatars/.gitkeep
+data/*.sqlite
+data/*.sqlite-*
+.DS_Store
+**/.DS_Store
+网页版/

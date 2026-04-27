@@ -1,0 +1,96 @@
+.page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 14px 16px 32px;
+  background: var(--page-bg-cool, #f4f4f3);
+  box-sizing: border-box;
+}
+
+.joinTitle {
+  color: #111111;
+  font-size: 20px;
+  line-height: 1.25;
+  font-weight: 700;
+  text-align: center;
+}
+
+.formBlock {
+  margin-top: 20px;
+}
+
+.codeInputList {
+  display: flex;
+  gap: 6px;
+}
+
+.codeInput {
+  flex: 1;
+  min-width: 0;
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid #e8ecf1;
+  background: #ffffff;
+  color: #111111;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 48px;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+  padding: 0;
+}
+
+.codeInput:focus {
+  border-color: var(--cta-green, #d8f940);
+}
+
+.submitBtn {
+  width: 100%;
+  min-height: 44px;
+  margin-top: 28px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: var(--cta-green, #d8f940);
+  color: #111111;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 44px;
+  box-sizing: border-box;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.submitBtn:active {
+  background: var(--cta-green-hover, #c8eb35);
+}
+
+.submitBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---- Toast ---- */
+.toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px 20px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+  font-size: 14px;
+  z-index: 1000;
+  pointer-events: none;
+  animation: toastFade 1.5s ease forwards;
+}
+
+@keyframes toastFade {
+  0% { opacity: 0; }
+  15% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
+}

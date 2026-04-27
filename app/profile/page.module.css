@@ -1,0 +1,377 @@
+/* ========== 个人页样式 ========== */
+
+.profilePage {
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+  padding: 0 16px calc(env(safe-area-inset-bottom) + 48px);
+  background: #f4f4f3;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* 顶部渐变背景 */
+.bgHero {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 227px;
+  background: linear-gradient(180deg, #ecfbbb 0%, #f4f4f3 100%);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.flower {
+  position: absolute;
+  top: 28px;
+  left: 79px;
+  width: 109px;
+  height: 112px;
+  opacity: 0.82;
+}
+
+/* 页面标题 */
+.topbar {
+  margin-top: -22px;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.pageTitle {
+  color: #111111;
+  font-size: 28px;
+  line-height: 1.18;
+  font-weight: 900;
+}
+
+/* ========== 未登录卡片 ========== */
+.unauthCard {
+  position: relative;
+  z-index: 2;
+  margin-top: 17px;
+}
+
+.unauthHeader {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 14px 12px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.unauthAvatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #dadada;
+  flex-shrink: 0;
+}
+
+.unauthAvatarImage {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #dadada;
+  object-fit: cover;
+}
+
+.unauthCopy {
+  min-width: 0;
+  flex: 1;
+}
+
+.unauthName {
+  color: #2a3234;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.unauthTip {
+  margin-top: 4px;
+  color: #8c9199;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* ========== Hero 卡片 ========== */
+.hero {
+  position: relative;
+  z-index: 2;
+  margin-top: 17px;
+  padding: 16px;
+  border-radius: 20px;
+  background: #ffffff;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.hero.hasIllustration {
+  min-height: 236px;
+}
+
+.heroCopy {
+  position: relative;
+  z-index: 2;
+}
+
+.headRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #f0e6dd;
+  border: 3px solid #ffffff;
+  box-shadow: 0 4px 7px rgba(17, 17, 17, 0.08);
+  box-sizing: border-box;
+  object-fit: cover;
+}
+
+.avatarFallback {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #f0e6dd;
+  border: 3px solid #ffffff;
+  box-shadow: 0 4px 7px rgba(17, 17, 17, 0.08);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.main {
+  min-width: 0;
+  flex: 1;
+  padding-top: 2px;
+}
+
+.name {
+  max-width: 105px;
+  color: #111111;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.seat {
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  height: 16px;
+  padding: 0 7px;
+  border-radius: 15px;
+  background: rgba(254, 92, 1, 0.1);
+  color: #fe5c01;
+  font-size: 10px;
+  line-height: 1;
+}
+
+.editBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: #d8f940;
+  box-sizing: border-box;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s;
+}
+
+.editBtn:active {
+  opacity: 0.7;
+}
+
+.editText {
+  color: #111111;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* 标签列表 */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+  max-width: 100%;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
+  padding: 0 12px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+/* 简介 */
+.bio {
+  margin-top: 12px;
+  width: 209px;
+  color: #7a8290;
+  font-size: 12px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 统计信息 */
+.stats {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-top: 20px;
+  max-width: 194px;
+  padding: 8px 0;
+  border-radius: 20px;
+  background: #ffffff;
+}
+
+.stat {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+
+.statValue {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  max-width: 60px;
+  color: #111111;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.statValuePlaceholder {
+  color: #939ba7;
+  font-size: 12px;
+}
+
+.statLabel {
+  margin-top: 4px;
+  color: #939ba7;
+  font-size: 10px;
+  line-height: 1.2;
+}
+
+/* 装饰插图 */
+.illustration {
+  position: absolute;
+  right: 16px;
+  bottom: -38px;
+  width: 97px;
+  height: 153px;
+  z-index: 1;
+}
+
+/* ========== 设置菜单 ========== */
+.settingsCard {
+  position: relative;
+  z-index: 2;
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 20px;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.settingsItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 36px;
+  background: transparent;
+  box-sizing: border-box;
+  cursor: pointer;
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 0;
+}
+
+.settingsItem:active {
+  opacity: 0.7;
+}
+
+.settingsItemMain {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.settingsItemIcon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.settingsItemLabel {
+  color: #2a3234;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.settingsItemArrow {
+  width: 6px;
+  height: 6px;
+  border-top: 1px solid #939ba7;
+  border-right: 1px solid #939ba7;
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+.settingsDivider {
+  height: 1px;
+  margin: 7px 0;
+  background: rgba(17, 17, 17, 0.06);
+}
+
+/* ========== 桌面端适配 ========== */
+@media (min-width: 768px) {
+  .profilePage {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+}
