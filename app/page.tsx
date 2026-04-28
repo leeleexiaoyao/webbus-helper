@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useTrip } from "@/src/lib/hooks/use-trip";
 import { useAuth } from "@/src/lib/hooks/use-auth";
-import { TabBar } from "@/components/TabBar/TabBar";
 import { SeatGrid } from "@/components/SeatGrid/SeatGrid";
 import { MemberList } from "@/components/MemberList/MemberList";
 import { SeatSheet } from "@/components/SeatSheet/SeatSheet";
@@ -93,7 +92,6 @@ export default function HomePage() {
         <div className={styles.loadingWrap}>
           <span style={{ color: "#b6bac1", fontSize: 13 }}>加载中...</span>
         </div>
-        <TabBar />
       </div>
     );
   }
@@ -113,7 +111,6 @@ export default function HomePage() {
             去登录
           </button>
         </div>
-        <TabBar />
       </div>
     );
   }
@@ -141,7 +138,6 @@ export default function HomePage() {
             </button>
           </div>
         </div>
-        <TabBar />
       </div>
     );
   }
@@ -358,8 +354,6 @@ export default function HomePage() {
         onToggleFavorite={handleToggleFavorite}
         onClose={handleSheetClose}
       />
-
-      <TabBar />
     </div>
   );
 }

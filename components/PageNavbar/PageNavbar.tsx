@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useAppShell } from "@/components/app-shell/AppShell";
 import styles from "./PageNavbar.module.css";
 
 interface PageNavbarProps {
@@ -18,32 +19,27 @@ export function PageNavbar({
   onBack,
 }: PageNavbarProps) {
   const router = useRouter();
+  const { scrollTop } = useAppShell();
   const [opacity, setOpacity] = useState(transparent ? 0 : 1);
-  const scrollRef = useRef(0);
-
-  const handleScroll = useCallback(() => {
-    if (!transparent) return;
-    const scrollTop = window.scrollY;
-    const threshold = 60;
-    const nextOpacity = Math.min(scrollTop / threshold, 1);
-    if (Math.abs(nextOpacity - scrollRef.current) > 0.01) {
-      scrollRef.current = nextOpacity;
-      setOpacity(nextOpacity);
-    }
-  }, [transparent]);
 
   useEffect(() => {
-    if (transparent) {
-      window.addEventListener("scroll", handleScroll, { passive: true });
-      return () => window.removeEventListener("scroll", handleScroll);
+    if (!transparent) {
+      setOpacity(1);
+      return;
     }
-  }, [transparent, handleScroll]);
+
+    const threshold = 60;
+    const nextOpacity = Math.min(scrollTop / threshold, 1);
+    setOpacity(nextOpacity);
+  }, [scrollTop, transparent]);
 
   const handleBack = useCallback(() => {
     if (onBack) {
       onBack();
-    } else {
+    } else if (window.history.length > 1) {
       router.back();
+    } else {
+      router.push("/");
     }
   }, [onBack, router]);
 

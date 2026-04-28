@@ -1,4 +1,6 @@
 :root {
+  --app-shell-max-width: 480px;
+  --app-tabbar-height: 74px;
   /* 颜色体系 - 与小程序完全一致 */
   --page-bg: #ffffff;
   --surface: #ffffff;
@@ -70,11 +72,20 @@
 html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  background: var(--page-bg);
+  overscroll-behavior-x: none;
+  overscroll-behavior-y: contain;
 }
 
 body {
-  min-height: 100vh;
-  min-height: 100dvh;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
   background: var(--page-bg);
   color: var(--text-primary);
   font-size: var(--font-body);
@@ -82,7 +93,76 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
+  overflow: hidden;
+  overscroll-behavior-x: none;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+*::selection {
+  background: rgba(255, 83, 54, 0.16);
+}
+
+button,
+a,
+[role="button"] {
+  touch-action: manipulation;
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+img,
+button,
+a,
+[role="button"] {
+  -webkit-touch-callout: none;
+}
+
+button:active,
+a:active,
+[role="button"]:active {
+  opacity: 0.88;
+  transform: scale(0.985);
+}
+
+html[data-display-mode="standalone"] body {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  scrollbar-width: none;
+}
+
+html[data-display-mode="standalone"] body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+html[data-display-mode="standalone"] input,
+html[data-display-mode="standalone"] textarea,
+html[data-display-mode="standalone"] select,
+html[data-display-mode="standalone"] [contenteditable="true"],
+html[data-display-mode="standalone"] [data-allow-select="true"] {
+  user-select: text;
+  -webkit-user-select: text;
+  -webkit-touch-callout: default;
+}
+
+input,
+textarea,
+select,
+[contenteditable="true"] {
+  user-select: text;
+  -webkit-user-select: text;
+  -webkit-touch-callout: default;
 }
 
 /* 页面容器 - 与小程序一致 */
@@ -287,11 +367,6 @@ body {
 /* TabBar 底部间距 */
 .tab-bar-spacer {
   height: calc(60px + env(safe-area-inset-bottom) + 16px);
-}
-
-/* 滚动锁定 */
-body.scroll-locked {
-  overflow: hidden;
 }
 
 /* 桌面端基本适配 */

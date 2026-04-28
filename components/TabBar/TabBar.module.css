@@ -1,14 +1,20 @@
 .tabBar {
   position: fixed;
-  left: 10px;
-  right: 10px;
-  bottom: 8px;
+  left: 50%;
+  bottom: 10px;
+  width: min(calc(100vw - 20px), calc(var(--app-shell-max-width) - 20px));
+  transform: translateX(-50%);
   z-index: 60;
   box-sizing: border-box;
-  padding: 0 6px;
-  background: #ffffff;
-  border: 1px solid rgba(17, 17, 17, 0.05);
-  border-radius: 16px;
+  padding: 8px 8px calc(env(safe-area-inset-bottom, 0px) + 8px);
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(17, 17, 17, 0.06);
+  border-radius: 22px;
+  box-shadow:
+    0 18px 40px rgba(17, 17, 17, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: blur(22px);
+  backdrop-filter: blur(22px);
 }
 
 .inner {
@@ -20,27 +26,46 @@
 .tabItem {
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
-  padding: 5px 0 calc(env(safe-area-inset-bottom, 0px) + 5px);
+  gap: 5px;
+  min-height: 52px;
+  padding: 6px 0 0;
+  border-radius: 16px;
   box-sizing: border-box;
   text-decoration: none;
-  transition: opacity 150ms;
+  position: relative;
 }
 
 .tabItem:active {
-  opacity: 0.7;
+  opacity: 0.88;
+}
+
+.tabIcon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
 }
 
 .tabLabel {
-  color: #1f2539;
+  color: #5b6470;
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.2;
 }
 
 .tabItem.active .tabLabel {
   color: #ff5336;
-  font-weight: 600;
+}
+
+.activeLine {
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  width: 26px;
+  height: 3px;
+  border-radius: 999px;
+  background: #ff5336;
+  transform: translateX(-50%);
 }

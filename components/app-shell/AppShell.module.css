@@ -1,0 +1,65 @@
+.root {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at top, rgba(236, 251, 187, 0.45), transparent 34%),
+    linear-gradient(180deg, #f7f6f2 0%, #f3f2ef 100%);
+}
+
+.frame {
+  position: relative;
+  width: min(100vw, var(--app-shell-max-width));
+  height: 100dvh;
+  margin: 0 auto;
+  overflow: hidden;
+  background: transparent;
+}
+
+.scrollArea {
+  position: relative;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scrollbar-width: none;
+}
+
+.scrollArea::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.scrollAreaWithTabBar {
+  padding-bottom: calc(var(--app-tabbar-height) + env(safe-area-inset-bottom, 0px) + 10px);
+}
+
+.scrollAreaAuth {
+  display: flex;
+  align-items: stretch;
+}
+
+.scrollAreaLocked {
+  overflow: hidden;
+  touch-action: none;
+}
+
+.routeStage {
+  min-height: 100%;
+  animation: routeEnter 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, opacity;
+}
+
+@keyframes routeEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}

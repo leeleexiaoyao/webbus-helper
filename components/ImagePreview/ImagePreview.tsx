@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
+import { useScrollLock } from "@/src/lib/hooks/use-scroll-lock";
 import styles from "./ImagePreview.module.css";
 
 interface ImagePreviewProps {
@@ -17,17 +18,14 @@ export function ImagePreview({ visible, urls, current = 0, onClose }: ImagePrevi
   const [isDragging, setIsDragging] = useState(false);
   const lastTouchRef = useRef<{ x: number; y: number; dist: number } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  useScrollLock(visible);
 
   useEffect(() => {
     if (visible) {
       setIndex(current);
       setScale(1);
       setTranslate({ x: 0, y: 0 });
-      document.body.classList.add("scroll-locked");
-    } else {
-      document.body.classList.remove("scroll-locked");
     }
-    return () => document.body.classList.remove("scroll-locked");
   }, [visible, current]);
 
   const handleWheel = useCallback((e: React.WheelEvent) => {

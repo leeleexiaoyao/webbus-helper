@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useScrollLock } from "@/src/lib/hooks/use-scroll-lock";
 import styles from "./Modal.module.css";
 
 interface ModalProps {
@@ -22,14 +22,7 @@ export function Modal({
   onConfirm,
   onCancel,
 }: ModalProps) {
-  useEffect(() => {
-    if (visible) {
-      document.body.classList.add("scroll-locked");
-    } else {
-      document.body.classList.remove("scroll-locked");
-    }
-    return () => document.body.classList.remove("scroll-locked");
-  }, [visible]);
+  useScrollLock(visible);
 
   if (!visible) return null;
 

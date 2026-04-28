@@ -1,10 +1,15 @@
-const CACHE_NAME = "bus-seat-buddy-pwa-v1";
+const CACHE_NAME = "bus-seat-buddy-pwa-v2";
 const APP_SHELL = [
   "/",
   "/manifest.webmanifest",
   "/apple-touch-icon.png",
   "/pwa-192.png",
   "/pwa-512.png",
+  "/pwa-512-maskable.png",
+  "/shortcut-create.png",
+  "/shortcut-join.png",
+  "/screenshot-home.png",
+  "/screenshot-tools.png",
 ];
 
 self.addEventListener("install", (event) => {

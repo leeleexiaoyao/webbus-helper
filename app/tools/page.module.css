@@ -4,7 +4,7 @@
   min-height: 100vh;
   min-height: 100dvh;
   position: relative;
-  padding: 0 16px calc(env(safe-area-inset-bottom) + 48px);
+  padding: max(env(safe-area-inset-top, 0px), 22px) 16px calc(var(--app-tabbar-height) + env(safe-area-inset-bottom) + 16px);
   background: #f4f4f3;
   box-sizing: border-box;
   overflow-x: hidden;
@@ -204,7 +204,7 @@
 
 /* ========== 加载状态 ========== */
 .loadingWrap {
-  min-height: calc(100vh - 180px);
+  min-height: calc(100dvh - 240px);
   display: flex;
   align-items: center;
   justify-content: center;

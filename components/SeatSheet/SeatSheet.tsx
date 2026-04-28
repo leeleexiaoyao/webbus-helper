@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
 import Image from "next/image";
+import { useScrollLock } from "@/src/lib/hooks/use-scroll-lock";
 import styles from "./SeatSheet.module.css";
 
 /* ========== 类型定义 ========== */
@@ -68,15 +68,7 @@ export function SeatSheet({
   onToggleFavorite,
   onClose,
 }: SeatSheetProps) {
-  /* 滚动锁定 */
-  useEffect(() => {
-    if (visible) {
-      document.body.classList.add("scroll-locked");
-    } else {
-      document.body.classList.remove("scroll-locked");
-    }
-    return () => document.body.classList.remove("scroll-locked");
-  }, [visible]);
+  useScrollLock(visible);
 
   if (!visible) return null;
 

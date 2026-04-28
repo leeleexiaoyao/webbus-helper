@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useScrollLock } from "@/src/lib/hooks/use-scroll-lock";
 import styles from "./ActionSheet.module.css";
 
 interface ActionSheetProps {
@@ -23,14 +23,7 @@ export function ActionSheet({
   cancelText = "取消",
   onClose,
 }: ActionSheetProps) {
-  useEffect(() => {
-    if (visible) {
-      document.body.classList.add("scroll-locked");
-    } else {
-      document.body.classList.remove("scroll-locked");
-    }
-    return () => document.body.classList.remove("scroll-locked");
-  }, [visible]);
+  useScrollLock(visible);
 
   if (!visible) return null;
 

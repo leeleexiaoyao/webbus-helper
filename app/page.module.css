@@ -4,7 +4,7 @@
   min-height: 100vh;
   min-height: 100dvh;
   position: relative;
-  padding: 0 0 calc(env(safe-area-inset-bottom) + 40px);
+  padding: max(env(safe-area-inset-top, 0px), 22px) 0 calc(var(--app-tabbar-height) + env(safe-area-inset-bottom) + 16px);
   background: #f3f2ef;
   overflow-x: hidden;
 }
@@ -196,7 +196,7 @@
 .tripPanel {
   margin: 13px 16px 0;
   padding: 14px 12px 12px;
-  min-height: calc(100vh - 205px);
+  min-height: calc(100dvh - 260px);
   box-sizing: border-box;
   background: rgba(255, 255, 255, 0.7);
   border-radius: 20px;
@@ -267,7 +267,7 @@
 
 /* ========== 引导卡片（无车次） ========== */
 .entryCard {
-  min-height: calc(100vh - 180px);
+  min-height: calc(100dvh - 240px);
   padding: 0 12px;
   position: relative;
   z-index: 1;
@@ -391,7 +391,7 @@
 
 /* ========== 加载状态 ========== */
 .loadingWrap {
-  min-height: calc(100vh - 180px);
+  min-height: calc(100dvh - 240px);
   display: flex;
   align-items: center;
   justify-content: center;

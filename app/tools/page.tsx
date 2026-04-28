@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useTrip } from "@/src/lib/hooks/use-trip";
-import { TabBar } from "@/components/TabBar/TabBar";
 import styles from "./page.module.css";
 
 /* 工具卡片数据 - 与小程序保持一致 */
@@ -65,7 +64,6 @@ export default function ToolsPage() {
         <div className={styles.loadingWrap}>
           <span style={{ color: "#b6bac1", fontSize: 13 }}>加载中...</span>
         </div>
-        <TabBar />
       </div>
     );
   }
@@ -125,8 +123,6 @@ export default function ToolsPage() {
           <div className={styles.toolsEmptyLabel}>加入车次后，才能进入玩法详情页</div>
         </div>
       )}
-
-      <TabBar />
     </div>
   );
 }

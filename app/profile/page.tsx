@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useTrip } from "@/src/lib/hooks/use-trip";
 import { buildTagColorViews } from "@/src/lib/tag-style";
 import { HOME_PERSONA_OPTIONS } from "@/src/domain/constants";
-import { TabBar } from "@/components/TabBar/TabBar";
 import styles from "./page.module.css";
 
 function resolveProfileIllustrationUrl(homePersonaAssetId: string | null): string {
@@ -185,7 +184,6 @@ export default function ProfilePage() {
         >
           加载中...
         </div>
-        <TabBar />
       </div>
     );
   }
@@ -241,8 +239,6 @@ export default function ProfilePage() {
             </div>
           ))}
         </div>
-
-        <TabBar />
       </div>
     );
   }
@@ -401,8 +397,6 @@ export default function ProfilePage() {
           </div>
         ))}
       </div>
-
-      <TabBar />
     </div>
   );
 }
